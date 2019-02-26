@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,18 +16,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("creat", "onCreate: ");
+        Log.i("create", "onCreate: ");
         setContentView(R.layout.activity_main);
 
-        AutoCompleteTextView textView = findViewById(R.id.autoComView);
-        String[] countries = getResources().getStringArray(R.array.countries);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, countries);
-        textView.setAdapter(adapter);
 
-        Button okButton = findViewById(R.id.okBtn);
-        okButton.setOnClickListener((View v) ->{
-                    Controller.getInstance().doJob();
-                });
     }
 
     @Override
