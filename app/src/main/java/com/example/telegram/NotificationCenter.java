@@ -4,19 +4,19 @@ import android.util.SparseArray;
 
 import java.util.ArrayList;
 
-public class NotifCenter {
-    private NotifCenter notifCenter;
+public class NotificationCenter {
+    private NotificationCenter notificationCenter;
     private SparseArray<ArrayList<Object>> observers = new SparseArray<>();
 
-    private NotifCenter(){
+    private NotificationCenter(){
 
     }
 
-    public NotifCenter getInstance(){
-        if (notifCenter == null)
-            notifCenter = new NotifCenter();
+    public NotificationCenter getInstance(){
+        if (notificationCenter == null)
+            notificationCenter = new NotificationCenter();
 
-        return notifCenter;
+        return notificationCenter;
     }
 
     public void add(NotifCenterCallback notifCenterCallback, int id){
