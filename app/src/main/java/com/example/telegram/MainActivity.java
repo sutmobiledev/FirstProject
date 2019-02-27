@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
 
     Button refreshBtn, getBtn, clearBtn;
     TextView textView;
@@ -66,5 +66,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.i("start", "onStop: ");
+    }
+
+    @Override
+    public void didReceivedNotification(int id, Object... args) {
+
     }
 }
