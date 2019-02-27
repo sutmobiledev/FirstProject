@@ -6,13 +6,13 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 
 public class NotificationCenter {
-    private static final int DATA_LOADED = 0x47;
+    public static final int DATA_LOADED = 0x47;
 
     public interface NotificationCenterDelegate {
         void didReceivedNotification(int id, Object... args);
     }
 
-    private NotificationCenter notificationCenter = new NotificationCenter();
+    private static NotificationCenter notificationCenter = new NotificationCenter();
     private SparseArray<ArrayList<Object>> observers = new SparseArray<>();
 
     private NotificationCenter(){
@@ -20,7 +20,7 @@ public class NotificationCenter {
     }
 
     @UiThread
-    public NotificationCenter getInstance(){
+    public static NotificationCenter getInstance(){
         return notificationCenter;
     }
 
@@ -46,7 +46,7 @@ public class NotificationCenter {
     }
 
     @UiThread
-    public void post(int id, Object... args){
+    public void data_loaded(int id, Object... args){
         ArrayList<Object> objects = observers.get(id);
 
         for (int i = 0; i < objects.size() ; i++) {
