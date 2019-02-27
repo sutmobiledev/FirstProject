@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
         android:layout_gravity="center_horizontal"
         >
 
@@ -61,11 +60,10 @@
             android:background="@color/colorPrimary"/>
         </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
+        android:id="@+id/Layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        />
+        android:layout_height="match_parent">
+    </LinearLayout>
 </LinearLayout>
