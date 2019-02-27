@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        NotificationCenter.getInstance().addObserver(this, NotificationCenter.DATA_LOADED);
+
         super.onCreate(savedInstanceState);
         Log.i("create", "onCreate: ");
         setContentView(R.layout.activity_main);
@@ -23,24 +25,11 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         getBtn = findViewById(R.id.getBtn);
         clearBtn = findViewById(R.id.clearBtn);
         refreshBtn = findViewById(R.id.refreshBtn);
-        getBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.fetch(false);
-            }
-        });
-        refreshBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.fetch(true);
-            }
-        });
-        clearBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout linearLayout = findViewById(R.id.Layout);
-                linearLayout.removeAllViews();
-            }
+        getBtn.setOnClickListener(v -> controller.fetch(false));
+        refreshBtn.setOnClickListener(v -> controller.fetch(true));
+        clearBtn.setOnClickListener(v -> {
+            LinearLayout linearLayout = findViewById(R.id.Layout);
+            linearLayout.removeAllViews();
         });
     }
 
