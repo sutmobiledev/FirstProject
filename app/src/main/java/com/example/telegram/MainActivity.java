@@ -9,9 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    Button refreshBtn, getBtn, clearBtn;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
         Log.i("create", "onCreate: ");
         setContentView(R.layout.activity_main);
 
-
+        getBtn = findViewById(R.id.getBtn);
+        clearBtn = findViewById(R.id.clearBtn);
+        refreshBtn = findViewById(R.id.refreshBtn);
+        textView = findViewById(R.id.textView);
     }
 
     @Override
