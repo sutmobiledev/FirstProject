@@ -1,21 +1,18 @@
 package com.example.telegram;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
     Button refreshBtn, getBtn, clearBtn;
     TextView textView;
+    MessageController controller = MessageController.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +23,25 @@ public class MainActivity extends AppCompatActivity {
         getBtn = findViewById(R.id.getBtn);
         clearBtn = findViewById(R.id.clearBtn);
         refreshBtn = findViewById(R.id.refreshBtn);
-        textView = findViewById(R.id.textView);
+        getBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controller.fetch(false);
+            }
+        });
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controller.fetch(true);
+            }
+        });
+        clearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout linearLayout = findViewById(R.id.Layout);
+                linearLayout.removeAllViews();
+            }
+        });
     }
 
     @Override
