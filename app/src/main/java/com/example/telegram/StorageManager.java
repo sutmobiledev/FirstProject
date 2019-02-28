@@ -59,6 +59,7 @@ public class StorageManager {
             loadR.add(i+n);
             i++;
         }
+        save(i+n-1);
         return loadR;
     }
 }
