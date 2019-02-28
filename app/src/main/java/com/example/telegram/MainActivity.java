@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     Button refreshBtn, getBtn, clearBtn;
     ArrayList<TextView> texts = new ArrayList<>();
     MessageController controller = MessageController.getInstance();
-    //LinearLayout layout = findViewById(R.id.Layout);
+    LinearLayout layout;
     Integer lastNUm = null;
 
     @Override
@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         super.onCreate(savedInstanceState);
         Log.i("create", "onCreate: ");
         setContentView(R.layout.activity_main);
+
+        layout = findViewById(R.id.Layout);
 
         getBtn = findViewById(R.id.getBtn);
         clearBtn = findViewById(R.id.clearBtn);
@@ -63,14 +65,17 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
     @Override
     public void didReceivedNotification(int id, Object... args) {
-        ArrayList<Integer> arrayList = (ArrayList<Integer>) args[0];
-        texts.add(new TextView(this));
-        //layout.addView(texts.get(texts.size()-1));
-        StringBuilder stringBuilder = new StringBuilder();
-        for(int i:arrayList){
-            stringBuilder.append(i);
-        }
-        lastNUm = arrayList.get(arrayList.size()-1);
-        texts.get(texts.size()-1).setText(stringBuilder);
+        runOnUiThread(()->{
+            ArrayList<Integer> arrayList = (ArrayList<Integer>) args[0];
+            texts.add(new TextView(this));
+            layout.addView(texts.get(texts.size()-1));
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int i:arrayList){
+                stringBuilder.append(i);
+            }
+            lastNUm = arrayList.get(arrayList.size()-1);
+            texts.get(texts.size()-1).setText(stringBuilder);
+        });
+
     }
 }
