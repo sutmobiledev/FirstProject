@@ -1,5 +1,7 @@
 package com.example.telegram;
 
+import android.os.Message;
+
 import java.util.ArrayList;
 
 public class MessageController {
@@ -29,13 +31,22 @@ public class MessageController {
         if (fromCache) {
             dispatchQueue.postRunnable(() -> {
                 ArrayList<Integer> arrayList = StorageManager.getInstance().load();
-                for (int i = 0 ; i < arrayList.size() ; i++)
-                    data.add(arrayList.get(i));
+                data.addAll(arrayList);
 
+                Message message = new Message();
+                message.what = NotificationCenter.DATA_LOADED;
+                message.obj = getData();
+                dispatchQueue.sendMessage(message, 0);
             });
         } else {
             dispatchQueue.postRunnable(() -> {
+                ArrayList<Integer> arrayList = ConnectionManager.getInstance().load(param);
+                data.addAll(arrayList);
 
+                Message message = new Message();
+                message.what = NotificationCenter.DATA_LOADED;
+                message.obj = getData();
+                dispatchQueue.sendMessage(message, 0);
             });
 
         }
