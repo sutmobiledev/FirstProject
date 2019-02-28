@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class StorageManager {
-    private File file = new File("/Users/sana/Desktop/file.txt");
+    private File file = new File("/file.txt");
     FileInputStream fileInputStream;
 
     {
