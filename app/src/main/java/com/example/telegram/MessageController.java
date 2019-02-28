@@ -41,6 +41,7 @@ public class MessageController {
         } else {
             dispatchQueue.postRunnable(() -> {
                 ArrayList<Integer> arrayList = ConnectionManager.getInstance().load(param);
+                StorageManager.getInstance().save(arrayList.get(arrayList.size()-1));
                 data.addAll(arrayList);
 
                 Message message = new Message();
