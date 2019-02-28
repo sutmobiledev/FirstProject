@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
     @Override
     public void didReceivedNotification(int id, Object... args) {
-        ArrayList<Integer> arrayList = new ArrayList<>();
+        ArrayList<Integer> arrayList = (ArrayList<Integer>) args[0];
         texts.add(new TextView(this));
         layout.addView(texts.get(texts.size()-1));
         StringBuilder stringBuilder = new StringBuilder();
