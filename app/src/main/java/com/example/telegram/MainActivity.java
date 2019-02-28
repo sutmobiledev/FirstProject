@@ -8,11 +8,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
 
     Button refreshBtn, getBtn, clearBtn;
-    TextView textView;
+    ArrayList<TextView> texts = new ArrayList<>();
     MessageController controller = MessageController.getInstance();
+    LinearLayout layout = findViewById(R.id.Layout);
+    Integer lastNUm = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         getBtn = findViewById(R.id.getBtn);
         clearBtn = findViewById(R.id.clearBtn);
         refreshBtn = findViewById(R.id.refreshBtn);
-        getBtn.setOnClickListener(v -> controller.fetch(false));
-        refreshBtn.setOnClickListener(v -> controller.fetch(true));
+        getBtn.setOnClickListener(v -> controller.fetch(false,lastNUm));
+        refreshBtn.setOnClickListener(v -> controller.fetch(true,null));
         clearBtn.setOnClickListener(v -> {
             LinearLayout linearLayout = findViewById(R.id.Layout);
             linearLayout.removeAllViews();
@@ -59,6 +63,14 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
     @Override
     public void didReceivedNotification(int id, Object... args) {
-
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        texts.add(new TextView(this));
+        layout.addView(texts.get(texts.size()-1));
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i:arrayList){
+            stringBuilder.append(i);
+        }
+        lastNUm = arrayList.get(arrayList.size()-1);
+        texts.get(texts.size()-1).setText(stringBuilder);
     }
 }
