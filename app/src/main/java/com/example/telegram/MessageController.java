@@ -15,7 +15,14 @@ public class MessageController {
     }
 
     private MessageController() {
-        dispatchQueue = new DispatchQueue("GetMessages");
+        dispatchQueue = new DispatchQueue("GetMessages"){
+            @Override
+            public void handleMessage(Message inputMessage) {
+                if (inputMessage.what == NotificationCenter.DATA_LOADED){
+                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
+                }
+            }
+        };
         data = new ArrayList<>();
     }
 
