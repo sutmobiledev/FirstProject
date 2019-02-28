@@ -23,10 +23,12 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         setContentView(R.layout.activity_main);
 
         getBtn = findViewById(R.id.getBtn);
-        clearBtn = findViewById(R.id.clearBtn);
-        refreshBtn = findViewById(R.id.refreshBtn);
         getBtn.setOnClickListener(v -> controller.fetch(false));
+
+        refreshBtn = findViewById(R.id.refreshBtn);
         refreshBtn.setOnClickListener(v -> controller.fetch(true));
+
+        clearBtn = findViewById(R.id.clearBtn);
         clearBtn.setOnClickListener(v -> {
             LinearLayout linearLayout = findViewById(R.id.Layout);
             linearLayout.removeAllViews();

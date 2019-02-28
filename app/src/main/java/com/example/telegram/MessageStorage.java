@@ -12,8 +12,15 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class MessageStorage {
+    private static final MessageStorage messageStorage = new MessageStorage();
+
     private File file = new File("/Users/sana/Desktop/file.txt");
-    FileInputStream fileInputStream;
+    private FileInputStream fileInputStream;
+
+    public static MessageStorage getInstance(){return messageStorage;}
+    private MessageStorage(){
+
+    }
 
     {
         try {
@@ -22,9 +29,9 @@ public class MessageStorage {
             e.printStackTrace();
         }
     }
-    InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-    FileOutputStream fileOutputStream;
+    private InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+    private BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+    private FileOutputStream fileOutputStream;
 
     {
         try {
@@ -33,19 +40,7 @@ public class MessageStorage {
             e.printStackTrace();
         }
     }
-    ArrayList<Integer> loadR;
-    private static final MessageStorage messageStorage = new MessageStorage();
-    public static MessageStorage getInstance(){return messageStorage;}
-    private MessageStorage(){
 
-    }
-
-    private DispatchQueue storageQueue = new DispatchQueue("storageQueue");
-
-    public void f1(){
-        Log.i("", "MessageStorage::f1");
-        storageQueue.postRunnable(() -> Log.i("", "MessageStorage::f1:postRunnable"));
-    }
     public void save(Integer lastNum){
         try {
             fileOutputStream.write(lastNum);
@@ -61,12 +56,10 @@ public class MessageStorage {
             e.printStackTrace();
 
         }
-        loadR = new ArrayList<>();
-        int i = 1;
-        while (i<=10){
+        ArrayList<Integer> loadR = new ArrayList<>();
+        for (int i = 1 ; i <= 10 ; i++)
             loadR.add(i+n);
 
-        }
         return loadR;
     }
 }
