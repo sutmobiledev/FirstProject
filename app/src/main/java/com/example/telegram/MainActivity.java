@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     Button refreshBtn, getBtn, clearBtn;
     ArrayList<TextView> texts = new ArrayList<>();
     MessageController controller = MessageController.getInstance();
-    LinearLayout layout = findViewById(R.id.Layout);
+    //LinearLayout layout = findViewById(R.id.Layout);
     Integer lastNUm = null;
 
     @Override
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     public void didReceivedNotification(int id, Object... args) {
         ArrayList<Integer> arrayList = (ArrayList<Integer>) args[0];
         texts.add(new TextView(this));
-        layout.addView(texts.get(texts.size()-1));
+        //layout.addView(texts.get(texts.size()-1));
         StringBuilder stringBuilder = new StringBuilder();
         for(int i:arrayList){
             stringBuilder.append(i);
