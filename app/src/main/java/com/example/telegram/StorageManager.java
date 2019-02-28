@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class StorageManager {
-    private File file = new File("/file.txt");
+    private File file = new File("Data");
     FileInputStream fileInputStream;
 
     {
@@ -32,9 +32,9 @@ public class StorageManager {
         }
     }
     ArrayList<Integer> loadR;
-    private static final StorageManager STORAGE_MANAGER = new StorageManager();
-    public static StorageManager getInstance(){return STORAGE_MANAGER;}
-    private StorageManager(){
+    //private static final StorageManager STORAGE_MANAGER = new StorageManager();
+    //public static StorageManager getInstance(){return STORAGE_MANAGER;}
+    public StorageManager(){
 
     }
 
