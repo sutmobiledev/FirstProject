@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class MessageController {
     private static final MessageController ourInstance = new MessageController();
     private ArrayList<Integer> data;
-    private DispatchQueue dispatchQueue = new DispatchQueue("What");
+    private DispatchQueue dispatchQueue;
 
 
     public static MessageController getInstance() {
@@ -13,6 +13,7 @@ public class MessageController {
     }
 
     private MessageController() {
+        dispatchQueue = new DispatchQueue("GetMessages");
         data = new ArrayList<>();
     }
 
@@ -24,39 +25,18 @@ public class MessageController {
         this.data = data;
     }
 
-    public DispatchQueue getDispatchQueue() {
-        return dispatchQueue;
-    }
-
-    public void setDispatchQueue(DispatchQueue dispatchQueue) {
-        this.dispatchQueue = dispatchQueue;
-    }
-
     public void fetch(boolean fromCache) {
-        if (fromCache == true) {
-            dispatchQueue.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-
-                }
+        if (fromCache) {
+            dispatchQueue.postRunnable(() -> {
+                ArrayList<Integer> arrayList = MessageStorage.getInstance().load();
+                for (int i = 0 ; i < arrayList.size() ; i++)
+                    data.add();
             });
         } else {
-            dispatchQueue.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-
-                }
+            dispatchQueue.postRunnable(() -> {
 
             });
 
         }
-    }
-
-    public void onComplite() {
-
-    }
-
-    public void doJob() {
-
     }
 }
