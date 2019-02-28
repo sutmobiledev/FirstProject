@@ -8,7 +8,6 @@ public class MessageController {
     private static final MessageController ourInstance = new MessageController();
     private ArrayList<Integer> data;
     private DispatchQueue dispatchQueue;
-    private StorageManager storageManager;
 
 
     public static MessageController getInstance() {
@@ -24,8 +23,8 @@ public class MessageController {
                 }
             }
         };
+        //dispatchQueue.start();
         data = new ArrayList<>();
-        storageManager = new StorageManager();
     }
 
     public ArrayList<Integer> getData() {
@@ -39,7 +38,7 @@ public class MessageController {
     public void fetch(boolean fromCache, Integer param) {
         if (fromCache) {
             dispatchQueue.postRunnable(() -> {
-                ArrayList<Integer> arrayList = storageManager.load();
+                ArrayList<Integer> arrayList = StorageManager.getInstance().load();
                 data.addAll(arrayList);
 
                 Message message = new Message();
@@ -56,7 +55,7 @@ public class MessageController {
                 else
                     arrayList = ConnectionManager.getInstance().load(param);
 
-                storageManager.save(arrayList.get(arrayList.size()-1));
+                //StorageManager.getInstance().save(arrayList.get(arrayList.size()-1));
                 data.addAll(arrayList);
 
                 Message message = new Message();

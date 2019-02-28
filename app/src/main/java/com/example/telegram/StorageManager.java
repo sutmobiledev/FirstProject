@@ -1,5 +1,7 @@
 package com.example.telegram;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,32 +12,36 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class StorageManager {
-    private File file = new File("Data");
-    FileInputStream fileInputStream;
+    private static final StorageManager ourInstance = new StorageManager();
 
-    {
-        try {
-            fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-    InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-    FileOutputStream fileOutputStream;
+    private FileInputStream fileInputStream;
+    private InputStreamReader inputStreamReader;
+    private BufferedReader bufferedReader;
+    private FileOutputStream fileOutputStream;
 
-    {
-        try {
-            fileOutputStream = new FileOutputStream(file,true);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
     ArrayList<Integer> loadR;
-    //private static final StorageManager STORAGE_MANAGER = new StorageManager();
-    //public static StorageManager getInstance(){return STORAGE_MANAGER;}
-    public StorageManager(){
 
+    public static StorageManager getInstance(){return ourInstance;}
+    private StorageManager(){
+        File file = new File("com/example/telegram/Data.txt");
+        {
+            try {
+                fileInputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        inputStreamReader = new InputStreamReader(fileInputStream);
+        bufferedReader = new BufferedReader(inputStreamReader);
+
+        {
+            try {
+                fileOutputStream = new FileOutputStream(file,false);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void save(Integer lastNum){
@@ -59,7 +65,7 @@ public class StorageManager {
             loadR.add(i+n);
             i++;
         }
-        save(i+n-1);
+        //save(i+n-1);
         return loadR;
     }
 }
