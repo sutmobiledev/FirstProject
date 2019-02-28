@@ -10,30 +10,26 @@ public class MessageController {
     private DispatchQueue dispatchQueue;
 
 
-    public static MessageController getInstance() {
-        return ourInstance;
-    }
-
     private MessageController() {
-        dispatchQueue = new DispatchQueue("GetMessages"){
+        dispatchQueue = new DispatchQueue("GetMessages") {
             @Override
             public void handleMessage(Message inputMessage) {
-                if (inputMessage.what == NotificationCenter.DATA_LOADED){
+                if (inputMessage.what == NotificationCenter.DATA_LOADED) {
                     NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
                 }
             }
         };
-        //dispatchQueue.start();
         data = new ArrayList<>();
+    }
+
+    public static MessageController getInstance() {
+        return ourInstance;
     }
 
     public ArrayList<Integer> getData() {
         return data;
     }
 
-    public void setData(ArrayList<Integer> data) {
-        this.data = data;
-    }
 
     public void fetch(boolean fromCache, Integer param) {
         if (fromCache) {
@@ -55,8 +51,8 @@ public class MessageController {
                 else
                     arrayList = ConnectionManager.getInstance().load(param);
 
-                //StorageManager.getInstance().save(arrayList.get(arrayList.size()-1));
                 data.addAll(arrayList);
+                StorageManager.getInstance().save_file(arrayList.get(arrayList.size() - 1));
 
                 Message message = new Message();
                 message.what = NotificationCenter.DATA_LOADED;
