@@ -28,7 +28,7 @@ public class MessageController {
     public void fetch(boolean fromCache, Integer param) {
         if (fromCache) {
             dispatchQueue.postRunnable(() -> {
-                ArrayList<Integer> arrayList = MessageStorage.getInstance().load();
+                ArrayList<Integer> arrayList = StorageManager.getInstance().load();
                 for (int i = 0 ; i < arrayList.size() ; i++)
                     data.add(arrayList.get(i));
 
