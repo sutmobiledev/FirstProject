@@ -1,7 +1,5 @@
 package com.example.telegram;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class MessageStorage {
+public class StorageManager {
     private File file = new File("/Users/sana/Desktop/file.txt");
     FileInputStream fileInputStream;
 
@@ -34,18 +32,12 @@ public class MessageStorage {
         }
     }
     ArrayList<Integer> loadR;
-    private static final MessageStorage messageStorage = new MessageStorage();
-    public static MessageStorage getInstance(){return messageStorage;}
-    private MessageStorage(){
+    private static final StorageManager STORAGE_MANAGER = new StorageManager();
+    public static StorageManager getInstance(){return STORAGE_MANAGER;}
+    private StorageManager(){
 
     }
 
-    private DispatchQueue storageQueue = new DispatchQueue("storageQueue");
-
-    public void f1(){
-        Log.i("", "MessageStorage::f1");
-        storageQueue.postRunnable(() -> Log.i("", "MessageStorage::f1:postRunnable"));
-    }
     public void save(Integer lastNum){
         try {
             fileOutputStream.write(lastNum);
@@ -65,7 +57,7 @@ public class MessageStorage {
         int i = 1;
         while (i<=10){
             loadR.add(i+n);
-
+            i++;
         }
         return loadR;
     }
