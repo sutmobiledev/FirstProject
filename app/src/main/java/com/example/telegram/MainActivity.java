@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
                 stringBuilder.append(i);
             }
             texts.get(texts.size() - 1).setText(stringBuilder);
+            lastNUm = arrayList.get(arrayList.size() - 1);
         });
     }
 }
