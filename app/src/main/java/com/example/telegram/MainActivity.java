@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
             StringBuilder stringBuilder = new StringBuilder();
             for (int i : arrayList) {
                 stringBuilder.append(i);
+                stringBuilder.append(" ");
             }
             texts.get(texts.size() - 1).setText(stringBuilder);
             lastNUm = arrayList.get(arrayList.size() - 1);
