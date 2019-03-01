@@ -1,5 +1,7 @@
 package com.example.telegram;
 
+import android.util.Log;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,9 +38,20 @@ public class StorageManager {
     }
 
     public synchronized int load_file() {
+        StringBuilder s;
+        s = new StringBuilder();
+        int readed =0;
+        int nowRead = 0;
         try {
-            if (fileInputStream.getChannel().size() != 0)
-                return fileInputStream.read();
+            if (fileInputStream.getChannel().size() != 0) {
+                readed = fileInputStream.read();
+                nowRead = readed;
+                do {
+                    readed = nowRead;
+                    nowRead = fileInputStream.read();
+                }while (nowRead>readed);
+                return readed;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
