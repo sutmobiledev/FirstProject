@@ -45,15 +45,11 @@ public class MessageController {
             });
         } else {
             dispatchQueue.postRunnable(() -> {
-                ArrayList<Integer> arrayList;
-
-                if (param == null)
-                    arrayList = ConnectionManager.getInstance().load(0);
-                else
-                    arrayList = ConnectionManager.getInstance().load(param);
+                ArrayList<Integer> arrayList = ConnectionManager.getInstance().load(param);
 
                 data.clear();
                 data.addAll(arrayList);
+
                 StorageManager.getInstance().save_file(arrayList.get(arrayList.size() - 1));
 
                 Message message = new Message();

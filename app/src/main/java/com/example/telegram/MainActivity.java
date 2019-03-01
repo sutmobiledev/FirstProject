@@ -19,13 +19,14 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     ArrayList<TextView> texts = new ArrayList<>();
     MessageController controller = MessageController.getInstance();
     LinearLayout layout;
-    Integer lastNUm = null;
+    Integer lastNUm;
     FileOutputStream fileOutputStream;
     FileInputStream fileInputStream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.DATA_LOADED);
+        lastNUm = 0;
 
         super.onCreate(savedInstanceState);
         Log.i("create", "onCreate: ");
