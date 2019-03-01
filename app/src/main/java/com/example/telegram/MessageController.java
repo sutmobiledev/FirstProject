@@ -35,6 +35,7 @@ public class MessageController {
         if (fromCache) {
             dispatchQueue.postRunnable(() -> {
                 ArrayList<Integer> arrayList = StorageManager.getInstance().load();
+                data.clear();
                 data.addAll(arrayList);
 
                 Message message = new Message();
@@ -51,6 +52,7 @@ public class MessageController {
                 else
                     arrayList = ConnectionManager.getInstance().load(param);
 
+                data.clear();
                 data.addAll(arrayList);
                 StorageManager.getInstance().save_file(arrayList.get(arrayList.size() - 1));
 
