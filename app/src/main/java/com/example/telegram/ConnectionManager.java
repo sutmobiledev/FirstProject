@@ -3,14 +3,14 @@ package com.example.telegram;
 import java.util.ArrayList;
 
 public class ConnectionManager {
-    private static final ConnectionManager ourInstance = new ConnectionManager();
+    private static final ConnectionManager connectionManagerInstance = new ConnectionManager();
 
     private ConnectionManager() {
 
     }
 
     public static ConnectionManager getInstance() {
-        return ourInstance;
+        return connectionManagerInstance;
     }
 
     public ArrayList<Integer> load(Integer param) {

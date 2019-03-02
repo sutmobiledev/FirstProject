@@ -38,10 +38,14 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         getBtn.setOnClickListener(v -> controller.fetch(false, lastNUm));
 
         refreshBtn = findViewById(R.id.refreshBtn);
-        refreshBtn.setOnClickListener(v -> controller.fetch(true, null));
+        refreshBtn.setOnClickListener(v -> controller.fetch(true, lastNUm));
 
         clearBtn = findViewById(R.id.clearBtn);
-        clearBtn.setOnClickListener(v -> layout.removeAllViews());
+        clearBtn.setOnClickListener(v -> {
+            lastNUm = 0;
+            MessageController.getInstance().getData().clear();
+            layout.removeAllViews();
+        });
     }
 
     @Override
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         super.onStart();
         Log.i("start", "onStart: ");
         try {
-            fileOutputStream = openFileOutput("Data.txt", MODE_PRIVATE);
+            fileOutputStream = openFileOutput("Data.txt", MODE_APPEND);
             fileInputStream = openFileInput("Data.txt");
 
             StorageManager.getInstance().setFileOutputStream(fileOutputStream);
@@ -87,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     public void didReceivedNotification(int id, Object... args) {
         runOnUiThread(() -> {
             ArrayList<Integer> arrayList = (ArrayList<Integer>) args[0];
+
+            if (arrayList.isEmpty())
+                return;
+
             texts.add(new TextView(this));
             layout.addView(texts.get(texts.size() - 1));
             StringBuilder stringBuilder = new StringBuilder();

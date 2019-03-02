@@ -5,13 +5,23 @@ import android.os.Message;
 import java.util.ArrayList;
 
 public class MessageController {
-    private static final MessageController ourInstance = new MessageController();
+    private static final MessageController messageControllerInstance = new MessageController();
     private ArrayList<Integer> data;
-    private DispatchQueue dispatchQueue;
+    private DispatchQueue storageQueue, cloudQueue;
 
 
     private MessageController() {
-        dispatchQueue = new DispatchQueue("GetMessages") {
+        cloudQueue = new DispatchQueue("Cloud") {
+            @Override
+            public void handleMessage(Message inputMessage) {
+                if (inputMessage.what == NotificationCenter.DATA_LOADED) {
+                    storageQueue.postRunnable(() -> StorageManager.getInstance().save_file(data.get(data.size() - 1)));
+
+                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
+                }
+            }
+        };
+        storageQueue = new DispatchQueue("Storage") {
             @Override
             public void handleMessage(Message inputMessage) {
                 if (inputMessage.what == NotificationCenter.DATA_LOADED) {
@@ -23,7 +33,7 @@ public class MessageController {
     }
 
     public static MessageController getInstance() {
-        return ourInstance;
+        return messageControllerInstance;
     }
 
     public ArrayList<Integer> getData() {
@@ -33,31 +43,27 @@ public class MessageController {
 
     public void fetch(boolean fromCache, Integer param) {
         if (fromCache) {
-            dispatchQueue.postRunnable(() -> {
-                ArrayList<Integer> arrayList = StorageManager.getInstance().load();
-                data.clear();
+            // refresh btn
+            storageQueue.postRunnable(() -> {
+                ArrayList<Integer> arrayList = StorageManager.getInstance().load(param);
                 data.addAll(arrayList);
 
                 Message message = new Message();
                 message.what = NotificationCenter.DATA_LOADED;
-                message.obj = getData();
-                dispatchQueue.sendMessage(message, 0);
+                message.obj = data;
+                storageQueue.sendMessage(message, 0);
             });
         } else {
-            dispatchQueue.postRunnable(() -> {
+            // get btn
+            cloudQueue.postRunnable(() -> {
                 ArrayList<Integer> arrayList = ConnectionManager.getInstance().load(param);
-
-                data.clear();
                 data.addAll(arrayList);
-
-                StorageManager.getInstance().save_file(arrayList.get(arrayList.size() - 1));
 
                 Message message = new Message();
                 message.what = NotificationCenter.DATA_LOADED;
-                message.obj = getData();
-                dispatchQueue.sendMessage(message, 0);
+                message.obj = data;
+                cloudQueue.sendMessage(message, 0);
             });
-
         }
     }
 }
