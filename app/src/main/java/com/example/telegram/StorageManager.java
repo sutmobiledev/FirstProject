@@ -1,72 +1,73 @@
 package com.example.telegram;
 
-import android.util.Log;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Formatter;
+import java.util.Scanner;
 
 public class StorageManager {
-    private static final StorageManager ourInstance = new StorageManager();
+    private static final StorageManager storageManagerInstance = new StorageManager();
 
     private FileInputStream fileInputStream;
     private FileOutputStream fileOutputStream;
+    private Formatter formatter;
+    private Scanner scanner;
+    private int last_num_in_file = 0;
 
     private StorageManager() {
 
     }
 
     public static StorageManager getInstance() {
-        return ourInstance;
+        return storageManagerInstance;
     }
 
     public void setFileInputStream(FileInputStream fileInputStream) {
         this.fileInputStream = fileInputStream;
+        scanner = new Scanner(fileInputStream);
     }
 
     public void setFileOutputStream(FileOutputStream fileOutputStream) {
         this.fileOutputStream = fileOutputStream;
+        formatter = new Formatter(fileOutputStream);
     }
 
-    public synchronized void save_file(Integer lastNum) {
-        try {
-            fileOutputStream.write(lastNum);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void save_file(Integer lastNum) {
+        formatter = new Formatter(fileOutputStream);
+        formatter.format("%d\n", lastNum);
+        formatter.flush();
     }
 
-    public synchronized int load_file() {
-        StringBuilder s;
-        s = new StringBuilder();
-        int readed =0;
-        int nowRead = 0;
+    private int load_file() {
+        scanner = new Scanner(fileInputStream);
         try {
-            if (fileInputStream.getChannel().size() != 0) {
-                readed = fileInputStream.read();
-                nowRead = readed;
-                do {
-                    readed = nowRead;
-                    nowRead = fileInputStream.read();
-                }while (nowRead>readed);
-                return readed;
-            }
+            if (fileInputStream.getChannel().size() == 0)
+                return 0;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return 0;
+        int temp;
+        while (scanner.hasNextInt() && (temp = scanner.nextInt()) > -1) {
+            last_num_in_file = temp;
+            System.out.println("last_num_in_file = " + last_num_in_file);
+        }
+
+        return last_num_in_file;
     }
 
-    public ArrayList<Integer> load() {
+    public ArrayList<Integer> load(int param) {
+        ArrayList<Integer> loadR = new ArrayList<>();
         int n = load_file();
 
-        ArrayList<Integer> loadR = new ArrayList<>();
-        for (int i = 1; i <= 10; i++)
-            loadR.add(i + n);
+        if (param >= n)
+            return loadR;
 
-        save_file(n + 10);
+        for (int i = 1; i <= 10; i++)
+            loadR.add(i + param);
+
         return loadR;
     }
 }
