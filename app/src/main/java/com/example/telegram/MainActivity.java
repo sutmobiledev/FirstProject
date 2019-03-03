@@ -58,9 +58,13 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
             StorageManager.getInstance().setFileOutputStream(fileOutputStream);
             StorageManager.getInstance().setFileInputStream(fileInputStream);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        didReceivedNotification(0, controller.getData());
+
     }
 
     @Override
