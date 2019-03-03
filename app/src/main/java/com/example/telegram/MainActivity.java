@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     ArrayList<TextView> texts = new ArrayList<>();
     MessageController controller = MessageController.getInstance();
     LinearLayout layout;
-    Integer lastNUm;
+    Integer lastNUm = 0;
     FileOutputStream fileOutputStream;
     FileInputStream fileInputStream;
 
@@ -94,7 +94,10 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
             if (arrayList.isEmpty())
                 return;
-
+            if (texts.size() > 0) {
+                texts.clear();
+            }
+            layout.removeAllViews();
             texts.add(new TextView(this));
             layout.addView(texts.get(texts.size() - 1));
             StringBuilder stringBuilder = new StringBuilder();
