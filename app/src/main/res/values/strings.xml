@@ -1,18 +1,7 @@
 <resources>
     <string name="app_name">Telegram</string>
-    <string name="btn1">OK</string>
-    <string name="btn2">No</string>
-    <string name="btn3">Yes</string>
-    <string-array name="countries">
-        <item>Afghanistan</item>
-        <item>Albania</item>
-        <item>Angola</item>
-        <item>Tajikistan</item>
-        <item>Tibet</item>
-        <item>Iran</item>
-        <item>USA</item>
-        <item>UK</item>
-        <item>Germany</item>
-    </string-array>
+    <string name="getBtn">Get</string>
+    <string name="refreshBtn">Refresh</string>
+    <string name="clearBtn">Clear</string>
 
 </resources>
