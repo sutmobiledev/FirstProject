@@ -1,5 +1,7 @@
 package com.example.telegram;
 
+import android.util.Log;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -69,5 +71,14 @@ public class StorageManager {
             loadR.add(i + param);
 
         return loadR;
+    }
+
+    public void saveToDB(ArrayList<Post> data) {
+        Log.i("LogInfo:StorageManager: ", "Save Done!");
+    }
+
+    public ArrayList<Post> loadFromDB() {
+        Log.i("LogInfo:StorageManager: ", "Load Done!");
+        return new ArrayList<>();
     }
 }

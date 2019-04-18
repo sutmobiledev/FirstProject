@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         lastNUm = 0;
 
         super.onCreate(savedInstanceState);
-        Log.i("create", "onCreate: ");
+        Log.i("states", "onCreate: ");
         setContentView(R.layout.activity_main);
 
         layout = findViewById(R.id.Layout);
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     @Override
     protected void onStart() {
         super.onStart();
-        Log.i("start", "onStart: ");
+        Log.i("states", "onStart: ");
         try {
             fileOutputStream = openFileOutput("Data.txt", MODE_APPEND);
             fileInputStream = openFileInput("Data.txt");
@@ -70,16 +71,19 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("start", "onPause: ");
+        Log.i("states", "onPause: ");
     }
 
     @Override
     protected void onDestroy() {
+        Log.i("states", "onDestroy: ");
+
         super.onDestroy();
         NotificationCenter.getInstance().removeObserver(this);
         try {
             fileOutputStream.close();
             fileInputStream.close();
+            new File("Data.txt").delete();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,12 +92,12 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i("start", "onStop: ");
+        Log.i("states", "onStop: ");
     }
 
     @Override
     public void didReceivedNotification(int id, Object... args) {
-        runOnUiThread(() -> {
+        /*runOnUiThread(() -> {
             ArrayList<Integer> arrayList = (ArrayList<Integer>) args[0];
 
             if (arrayList.isEmpty())
@@ -111,6 +115,6 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
             }
             texts.get(texts.size() - 1).setText(stringBuilder);
             lastNUm = arrayList.get(arrayList.size() - 1);
-        });
+        });*/
     }
 }

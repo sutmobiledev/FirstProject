@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class MessageController {
     private static final MessageController messageControllerInstance = new MessageController();
-    private ArrayList<Integer> data;
+    private ArrayList<Post> data;
     private DispatchQueue storageQueue, cloudQueue;
 
 
@@ -15,7 +15,8 @@ public class MessageController {
             @Override
             public void handleMessage(Message inputMessage) {
                 if (inputMessage.what == NotificationCenter.DATA_LOADED) {
-                    storageQueue.postRunnable(() -> StorageManager.getInstance().save_file(data.get(data.size() - 1)));
+//                    storageQueue.postRunnable(() -> StorageManager.getInstance().save_file(data.get(data.size() - 1)));
+                    storageQueue.postRunnable(() -> StorageManager.getInstance().saveToDB(data));
 
                     NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
                 }
@@ -36,7 +37,7 @@ public class MessageController {
         return messageControllerInstance;
     }
 
-    public ArrayList<Integer> getData() {
+    public ArrayList<Post> getData() {
         return data;
     }
 
@@ -45,8 +46,9 @@ public class MessageController {
         if (fromCache) {
             // refresh btn
             storageQueue.postRunnable(() -> {
-                ArrayList<Integer> arrayList = StorageManager.getInstance().load(param);
-                data.addAll(arrayList);
+//                ArrayList<Integer> arrayList = StorageManager.getInstance().load(param);
+//                data.addAll(arrayList);
+                data = StorageManager.getInstance().loadFromDB();
 
                 Message message = new Message();
                 message.what = NotificationCenter.DATA_LOADED;
@@ -56,8 +58,10 @@ public class MessageController {
         } else {
             // get btn
             cloudQueue.postRunnable(() -> {
-                ArrayList<Integer> arrayList = ConnectionManager.getInstance().load(param);
-                data.addAll(arrayList);
+//                ArrayList<Integer> arrayList = new ArrayList<>();
+//                arrayList.add(1);
+                data = ConnectionManager.getInstance().load(param);
+                //data.addAll(arrayList);
 
                 Message message = new Message();
                 message.what = NotificationCenter.DATA_LOADED;
