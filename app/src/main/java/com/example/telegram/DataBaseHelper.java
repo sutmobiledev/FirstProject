@@ -1,5 +1,6 @@
 package com.example.telegram;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -46,5 +47,31 @@ class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS '" + POSTS_TABLE + "'");
         db.execSQL("DROP TABLE IF EXISTS '" + COMMENTS_TABLE + "'");
         onCreate(db);
+    }
+
+    public void addPost(Post post) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues postContentValues = new ContentValues();
+        postContentValues.put(POSTS_TABLE_COL0, post.getID());
+        postContentValues.put(POSTS_TABLE_COL1, post.getUserID());
+        postContentValues.put(POSTS_TABLE_COL2, post.getTitle());
+        postContentValues.put(POSTS_TABLE_COL3, post.getBody());
+        db.insert(POSTS_TABLE, null, postContentValues);
+        db.close();
+        for (Comment c : post.getComments()) {
+            addComment(c);
+        }
+    }
+
+    private void addComment(Comment comment) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues commentContentValues = new ContentValues();
+        commentContentValues.put(POSTS_TABLE_COL0, comment.getID());
+        commentContentValues.put(POSTS_TABLE_COL1, comment.getPostID());
+        commentContentValues.put(POSTS_TABLE_COL2, comment.getName());
+        commentContentValues.put(POSTS_TABLE_COL3, comment.getEmail());
+        commentContentValues.put(POSTS_TABLE_COL3, comment.getBody());
+        db.insert(COMMENTS_TABLE, null, commentContentValues);
+        db.close();
     }
 }
