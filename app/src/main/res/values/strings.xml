@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Telegram</string>
-    <string name="getBtn">Get</string>
-    <string name="refreshBtn">Refresh</string>
-    <string name="clearBtn">Clear</string>
-
+    <string name="app_name">settings</string>
+    <string name="action_settings">Developers</string>
+    <string name="refreshBthBtn">GRID/LIST</string>
+    <string name="names">Alireza Tabatbayi, Sana Ayromlou, Kiarash Amini</string>
+    <string name="title">Developers</string>
 </resources>
