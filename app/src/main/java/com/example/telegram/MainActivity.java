@@ -1,5 +1,6 @@
 package com.example.telegram;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -87,12 +88,13 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
-
+                startActivity(new Intent(MainActivity.this,Main2Activity.class));
             }
         });
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View view, int position, long id) {
+                startActivity(new Intent(MainActivity.this,Main2Activity.class));
 
             }
         });
@@ -146,11 +148,11 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
     private void setAdapters() {
         if(VIEW_MODE_LISTVIEW == currentViewMode){
-            listAdapter = new ImageAdapter(this,R.layout.grid_view,cards);
+            listAdapter = new ImageAdapter(this,R.layout.list_view,cards);
             listView.setAdapter(listAdapter);
         }
         else {
-            gridAdapter = new ImageAdapter(this,R.layout.list_view,cards);
+            gridAdapter = new ImageAdapter(this,R.layout.grid_view,cards);
             gridView.setAdapter(gridAdapter);
         }
     }
