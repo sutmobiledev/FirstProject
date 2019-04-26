@@ -19,6 +19,7 @@ public class ImageAdapter extends ArrayAdapter<Card> {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = view;
+        Card card = getItem(i);
         if (view == null) {
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.linearlayout_card, null);
@@ -28,7 +29,6 @@ public class ImageAdapter extends ArrayAdapter<Card> {
             final ViewHolder viewHolder = new ViewHolder(nameTextView, authorTextView);
             view.setTag(viewHolder);
         }
-        Card card = getItem(i);
 
         final ViewHolder viewHolder = (ViewHolder) view.getTag();
         viewHolder.nameTextView.setText(card.getName());

@@ -16,10 +16,10 @@ public class Card {
     }
 
     public String getName() {
-        return "name";
+        return title;
     }
 
     public String getAuthor() {
-        return "author";
+        return body;
     }
 }
