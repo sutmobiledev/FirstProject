@@ -81,9 +81,8 @@ public class StorageManager {
     }
 
     public ArrayList<Post> loadFromDB() {
-        dataBaseHelper.getPost();
         Log.i("LogInfo:StorageManager: ", "Load Done!");
-        return new ArrayList<>();
+        return  dataBaseHelper.getPost();
     }
 
     public ArrayList<Post> loadPostsFromDB(){
