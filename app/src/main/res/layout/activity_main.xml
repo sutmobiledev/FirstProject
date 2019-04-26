@@ -45,7 +45,7 @@
                         android:layout_weight="1"
                         android:text="@string/refreshBthBtn"
                         android:gravity="center"
-                        android:background="@color/colorPrimaryDark"/>
+                        android:background="@color/colorPrimary"/>
 
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
