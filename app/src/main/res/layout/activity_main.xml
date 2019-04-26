@@ -26,7 +26,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="708dp"
-                    android:layout_margin="12dp"
+                    android:layout_margin="8dp"
                     android:orientation="horizontal"
                     tools:context=".MainActivity">
                     <TextView
@@ -44,6 +44,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/refreshBthBtn"
+                        android:gravity="center"
                         android:background="@color/colorPrimaryDark"/>
 
                 </LinearLayout>
