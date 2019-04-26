@@ -64,6 +64,7 @@ class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+
     public void addComment(Comment comment) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues commentContentValues = new ContentValues();
@@ -100,7 +101,7 @@ class DataBaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<Comment> getComment(int postId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE ID = " + postId, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE postId = " + postId, null);
         ArrayList<Comment> comments = null;
 
         if (cursor.moveToFirst()) {

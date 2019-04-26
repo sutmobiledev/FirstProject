@@ -14,7 +14,6 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,8 +126,6 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
         super.onDestroy();
         NotificationCenter.getInstance().removeObserver(this);
-
-        new File("Data.txt").delete();
     }
 
     @Override

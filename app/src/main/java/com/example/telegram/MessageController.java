@@ -44,8 +44,8 @@ public class MessageController {
         postArrayList = new ArrayList<>();
         commentArrayList = new ArrayList<>();
 
-        lastPostUpdate = System.currentTimeMillis();
-        lastCommentsUpdate = System.currentTimeMillis();
+        lastPostUpdate = 0;
+        lastCommentsUpdate = 0;
     }
 
     public static MessageController getInstance() {
