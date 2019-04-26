@@ -80,19 +80,22 @@ public class StorageManager {
         Log.i("LogInfo:StorageManager: ", "Save Done!");
     }
 
+    public void SaveCommentsToDB(ArrayList<Comment> data) {
+        for (Comment c : data) {
+            dataBaseHelper.addComment(c);
+        }
+        Log.i("LogInfo:StorageManager: ", "Save Comment Done!");
+    }
+
     public ArrayList<Post> loadFromDB() {
         Log.i("LogInfo:StorageManager: ", "Load Done!");
         return  dataBaseHelper.getPost();
     }
 
-    public ArrayList<Post> loadPostsFromDB(){
-        Log.i("LogInfo:StorageManager: ", "Posts Load Done!");
-        return null;
-    }
 
     public ArrayList<Comment> loadCommentsFromDB(int postId) {
         Log.i("LogInfo:StorageManager: ", "Posts Load Done!");
-        return null;
+        return dataBaseHelper.getComment(postId);
     }
 
     public void setDataBaseHelper(DataBaseHelper dataBaseHelper) {

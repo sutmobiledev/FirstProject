@@ -62,12 +62,9 @@ class DataBaseHelper extends SQLiteOpenHelper {
         postContentValues.put(POSTS_TABLE_COL3, post.getBody());
         db.insert(POSTS_TABLE, null, postContentValues);
         db.close();
-        for (Comment c : post.getComments()) {
-            addComment(c);
-        }
     }
 
-    private void addComment(Comment comment) {
+    public void addComment(Comment comment) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues commentContentValues = new ContentValues();
         commentContentValues.put(POSTS_TABLE_COL0, comment.getID());
@@ -79,12 +76,13 @@ class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<Post> getPost(){
+    public ArrayList<Post> getPost() {
         SQLiteDatabase db = this.getReadableDatabase();
-        ArrayList<Post> posts = new ArrayList<>();
+        ArrayList<Post> posts = null;
         Cursor cursor = db.rawQuery("SELECT * FROM " + POSTS_TABLE, null);
-        Log.i("get post:",Integer.toString(cursor.getColumnCount()));
+        Log.i("get post:", Integer.toString(cursor.getColumnCount()));
         if (cursor.moveToFirst()) {
+            posts = new ArrayList<>();
             do {
                 Post post = new Post();
                 post.setID(cursor.getInt(0));
@@ -95,9 +93,32 @@ class DataBaseHelper extends SQLiteOpenHelper {
                 posts.add(post);
             } while (cursor.moveToNext());
         }
-
         cursor.close();
         db.close();
-        return null;
+        return posts;
+    }
+
+    public ArrayList<Comment> getComment(int postId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + COMMENTS_TABLE + " WHERE ID = " + postId, null);
+        ArrayList<Comment> comments = null;
+
+        if (cursor.moveToFirst()) {
+            comments = new ArrayList<>();
+            do {
+                Comment comment = new Comment();
+                comment.setID(cursor.getInt(0));
+                comment.setPostID(cursor.getInt(1));
+                comment.setName(cursor.getString(2));
+                comment.setEmail(cursor.getString(3));
+                comment.setBody(cursor.getString(4));
+
+                comments.add(comment);
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        cursor.close();
+        return comments;
     }
 }
