@@ -16,7 +16,10 @@ public class Card {
     }
 
     public String getName() {
-        return title;
+        if(title != null)
+            return title;
+        else
+            return name;
     }
 
     public String getAuthor() {
