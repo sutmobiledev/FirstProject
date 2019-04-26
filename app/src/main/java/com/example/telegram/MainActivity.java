@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     private TextView state;
     private int currentViewMode = 0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.POST_LOADED);
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
             cards = new ArrayList<>();
             for (int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
-                cards.add(new Card(post.getBody(), Card.TYPE_POST, post.getTitle(),0));
+                cards.add(new Card(post.getBody(), Card.TYPE_POST, post.getTitle(),post.getID()));
             }
 
             Button button = findViewById(R.id.refreshBtn);
@@ -165,8 +166,9 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
                 @Override
                 public void onItemClick(AdapterView adapterView, View view, int i, long l) {
                     Card card = cards.get(i);
-                    Log.i("asdf", String.valueOf(card.getName()));
+                    Log.i("asdf", String.valueOf(card.getPostId()));
                     Main2Activity.getInstance().setPostId(card.getPostId());
+                    startActivity(new Intent(MainActivity.this, Main2Activity.class));
                 }
             });
 
@@ -176,12 +178,11 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
                 @Override
                 public void onItemClick(AdapterView adapterView, View view, int i, long l) {
                     Card card = cards.get(i);
+                    Log.i("asdf", String.valueOf(card.getPostId()));
                     Main2Activity.getInstance().setPostId(card.getPostId());
-
-
+                    startActivity(new Intent(MainActivity.this, Main2Activity.class));
                 }
             });
-
             state.setText(R.string.connected);
         });
     }

@@ -107,7 +107,7 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
             cards = new ArrayList<>();
             for (int i = 0; i < comments.size(); i++) {
                 Comment comment = comments.get(i);
-                cards.add(new Card(comment.getBody(), Card.TYPE_COMMENT, comment.getName(),comment.getPostID()));
+                cards.add(new Card(comment.getBody(), Card.TYPE_COMMENT, comment.getName(),0));
             }
 
             ListView listView = findViewById(R.id.listView);
