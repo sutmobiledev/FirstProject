@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     protected void onCreate(Bundle savedInstanceState) {
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.DATA_LOADED);
         lastNUm = 0;
+        StorageManager.getInstance().setDataBaseHelper(new DataBaseHelper(this));
 
         super.onCreate(savedInstanceState);
         Log.i("states", "onCreate: ");
