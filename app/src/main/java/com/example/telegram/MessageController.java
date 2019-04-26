@@ -16,7 +16,7 @@ public class MessageController {
             public void handleMessage(Message inputMessage) {
                 if (inputMessage.what == NotificationCenter.DATA_LOADED) {
 //                    storageQueue.postRunnable(() -> StorageManager.getInstance().save_file(data.get(data.size() - 1)));
-                    storageQueue.postRunnable(() -> StorageManager.getInstance().saveToDB(data));
+                    storageQueue.postRunnable(() -> StorageManager.getInstance().savePostsToDB(data));
 
                     NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
                 }
@@ -48,7 +48,7 @@ public class MessageController {
             storageQueue.postRunnable(() -> {
 //                ArrayList<Integer> arrayList = StorageManager.getInstance().loadPosts(param);
 //                data.addAll(arrayList);
-                data = StorageManager.getInstance().loadFromDB();
+                data = StorageManager.getInstance().loadPostsFromDB();
 
                 Message message = new Message();
                 message.what = NotificationCenter.DATA_LOADED;
