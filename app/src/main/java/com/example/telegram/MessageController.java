@@ -46,7 +46,7 @@ public class MessageController {
         if (fromCache) {
             // refresh btn
             storageQueue.postRunnable(() -> {
-//                ArrayList<Integer> arrayList = StorageManager.getInstance().load(param);
+//                ArrayList<Integer> arrayList = StorageManager.getInstance().loadPosts(param);
 //                data.addAll(arrayList);
                 data = StorageManager.getInstance().loadFromDB();
 
@@ -60,7 +60,7 @@ public class MessageController {
             cloudQueue.postRunnable(() -> {
 //                ArrayList<Integer> arrayList = new ArrayList<>();
 //                arrayList.add(1);
-                data = ConnectionManager.getInstance().load(param);
+                data = ConnectionManager.getInstance().loadPosts();
                 //data.addAll(arrayList);
 
                 Message message = new Message();

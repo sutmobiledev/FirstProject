@@ -72,52 +72,35 @@ public class ConnectionManager {
         return res.toString();
     }
 
-    public ArrayList<Post> load(Integer param) {
-        ArrayList<Post> loadR = new ArrayList<>();
-        JSONArray jsonPostArray, jsonCommentsArray;
+    public ArrayList<Post> loadPosts() {
+        ArrayList<Post> posts = new ArrayList<>();
+        JSONArray jsonPostArray;
 
-        String posts = readFromURL("https://jsonplaceholder.typicode.com/posts");
-        String comments = readFromURL("https://jsonplaceholder.typicode.com/posts/1/comments");
+        String posts_str = readFromURL("https://jsonplaceholder.typicode.com/posts");
         try {
-            jsonPostArray = new JSONArray(posts);
-            jsonCommentsArray = new JSONArray(comments);
+            jsonPostArray = new JSONArray(posts_str);
 
             int j = 0;
             for (int i = 0; i < jsonPostArray.length(); i++) {
                 JSONObject post = jsonPostArray.getJSONObject(i);
-                ArrayList<Comment> commentsArrayList = new ArrayList<>();
 
-                while (j < jsonCommentsArray.length() && jsonCommentsArray.getJSONObject(j).getInt("postId") == post.getInt("id")) {
-                    JSONObject comment = jsonCommentsArray.getJSONObject(j);
-
-                    commentsArrayList.add(new Comment(
-                            comment.getInt("id"),
-                            comment.getInt("postId"),
-                            comment.getString("name"),
-                            comment.getString("email"),
-                            comment.getString("body")
-                    ));
-
-                    j++;
-                }
-
-                loadR.add(
+                posts.add(
                         new Post(
                                 post.getInt("id"),
                                 post.getInt("userId"),
                                 post.getString("title"),
-                                post.getString("body"),
-                                commentsArrayList
+                                post.getString("body")
                         )
                 );
 
-//                System.out.print(loadR.get(i).getID());
-//                System.out.print(":\t");
-//                for (int k = 0; k < loadR.get(i).getComments().size(); k++){
-//                    System.out.print(loadR.get(i).getComments().get(k).getID());
-//                    System.out.print('\t');
-//                }
-//                System.out.println("\n----------------------");
+                System.out.print(posts.get(i).getID());
+                System.out.print(":\t");
+                ArrayList<Comment> comments = loadComments(posts.get(i).getID());
+                for (int k = 0; k < comments.size(); k++) {
+                    System.out.print(comments.get(k).getPostID());
+                    System.out.print('\t');
+                }
+                System.out.println("\n----------------------");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -125,6 +108,34 @@ public class ConnectionManager {
 
         Log.i("LogInfo:ConnectionManager: ", "Load Done!");
 
-        return loadR;
+        return posts;
+    }
+
+    public ArrayList<Comment> loadComments(int postId) {
+        ArrayList<Comment> comments = new ArrayList<>();
+        JSONArray jsonCommentsArray;
+
+        String comments_str = readFromURL("https://jsonplaceholder.typicode.com/comments?postId=" + String.valueOf(postId));
+
+        try {
+            jsonCommentsArray = new JSONArray(comments_str);
+            for (int i = 0; i < jsonCommentsArray.length(); i++) {
+                JSONObject comment = jsonCommentsArray.getJSONObject(i);
+
+                comments.add(
+                        new Comment(
+                                comment.getInt("id"),
+                                comment.getInt("postId"),
+                                comment.getString("name"),
+                                comment.getString("email"),
+                                comment.getString("body")
+                        )
+                );
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return comments;
     }
 }
