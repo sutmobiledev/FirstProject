@@ -12,6 +12,7 @@ import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,11 +26,13 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     private MessageController controller = MessageController.getInstance();
     private ViewStub stubGrid;
     private ViewStub stubList;
+    private List<Card> cards = new ArrayList<>();
+    private TextView state;
     private int currentViewMode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        NotificationCenter.getInstance().addObserver(this, NotificationCenter.DATA_LOADED);
+        NotificationCenter.getInstance().addObserver(this, NotificationCenter.POST_LOADED);
         StorageManager.getInstance().setDataBaseHelper(new DataBaseHelper(this));
 
         super.onCreate(savedInstanceState);
@@ -44,35 +47,8 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         stubGrid = findViewById(R.id.stub_grid);
         stubGrid.inflate();
 
-        List<Card> cards = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            cards.add(new Card());
-        }
-
-        Button button = findViewById(R.id.refreshBtn);
-        button.setOnClickListener(v -> {
-            Log.i("asdf", "refresh");
-            if (currentViewMode == VIEW_MODE_LISTVIEW)
-                currentViewMode = VIEW_MODE_GRIDVIEW;
-            else
-                currentViewMode = VIEW_MODE_LISTVIEW;
-
-            switchView();
-
-            getSharedPreferences("ViewMode", MODE_PRIVATE).edit().putInt("currentViewMode", currentViewMode).apply();
-        });
-
-        ListView listView = findViewById(R.id.listView);
-        listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
-        listView.setOnItemClickListener((parent, view, position, id) ->
-                startActivity(new Intent(MainActivity.this, Main2Activity.class))
-        );
-
-        GridView gridView = findViewById(R.id.gridView);
-        gridView.setAdapter(new ImageAdapter(this, R.layout.grid_view, cards));
-        gridView.setOnItemClickListener((parent, view, position, id) ->
-                startActivity(new Intent(MainActivity.this, Main2Activity.class))
-        );
+        state = findViewById(R.id.state);
+        state.setText(R.string.updating);
 
         currentViewMode = getSharedPreferences("ViewMode", MODE_PRIVATE).getInt("currentViewMode", VIEW_MODE_LISTVIEW);
 
@@ -84,7 +60,23 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         super.onStart();
         Log.i("states", "onStart: ");
 
-        didReceivedNotification(0, controller.getData());
+        if (ConnectionManager.isNetworkAvailable(getActivity()))
+            controller.fetchPost();
+        else {
+            state.setText(R.string.waiting);
+
+            new Thread(() -> {
+                while (!ConnectionManager.isNetworkAvailable(getActivity())) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                controller.fetchPost();
+            }).start();
+        }
     }
 
     private void switchView() {
@@ -146,25 +138,42 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     }
 
     @Override
-    public void didReceivedNotification(int id, Object... args) {
-        /*runOnUiThread(() -> {
-            ArrayList<Integer> arrayList = (ArrayList<Integer>) args[0];
+    public void didReceivedNotification(int eventId, Object... args) {
+        ArrayList<Post> posts = (ArrayList<Post>) args[0];
 
-            if (arrayList.isEmpty())
-                return;
-            if (texts.size() > 0) {
-                texts.clear();
+        runOnUiThread(() -> {
+            cards = new ArrayList<>();
+            for (int i = 0; i < posts.size(); i++) {
+                Post post = posts.get(i);
+                cards.add(new Card(post.getBody(), Card.TYPE_POST, post.getTitle()));
             }
-            layout.removeAllViews();
-            texts.add(new TextView(this));
-            layout.addView(texts.get(texts.size() - 1));
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i : arrayList) {
-                stringBuilder.append(i);
-                stringBuilder.append(" ");
-            }
-            texts.get(texts.size() - 1).setText(stringBuilder);
-            lastNUm = arrayList.get(arrayList.size() - 1);
-        });*/
+
+            Button button = findViewById(R.id.refreshBtn);
+            button.setOnClickListener(v -> {
+                Log.i("asdf", "refresh");
+                if (currentViewMode == VIEW_MODE_LISTVIEW)
+                    currentViewMode = VIEW_MODE_GRIDVIEW;
+                else
+                    currentViewMode = VIEW_MODE_LISTVIEW;
+
+                switchView();
+
+                getSharedPreferences("ViewMode", MODE_PRIVATE).edit().putInt("currentViewMode", currentViewMode).apply();
+            });
+
+            ListView listView = findViewById(R.id.listView);
+            listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
+            listView.setOnItemClickListener((parent, view, position, id) ->
+                    startActivity(new Intent(MainActivity.this, Main2Activity.class))
+            );
+
+            GridView gridView = findViewById(R.id.gridView);
+            gridView.setAdapter(new ImageAdapter(this, R.layout.grid_view, cards));
+            gridView.setOnItemClickListener((parent, view, position, id) ->
+                    startActivity(new Intent(MainActivity.this, Main2Activity.class))
+            );
+
+            state.setText(R.string.connected);
+        });
     }
 }

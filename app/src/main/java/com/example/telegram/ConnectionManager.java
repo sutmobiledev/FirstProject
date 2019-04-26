@@ -29,8 +29,7 @@ public class ConnectionManager {
     }
 
     public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity == null) {
             return false;
         } else {
@@ -95,11 +94,11 @@ public class ConnectionManager {
 
                 System.out.print(posts.get(i).getID());
                 System.out.print(":\t");
-                ArrayList<Comment> comments = loadComments(posts.get(i).getID());
-                for (int k = 0; k < comments.size(); k++) {
-                    System.out.print(comments.get(k).getPostID());
-                    System.out.print('\t');
-                }
+//                ArrayList<Comment> comments = loadComments(posts.get(i).getID());
+//                for (int k = 0; k < comments.size(); k++) {
+//                    System.out.print(comments.get(k).getPostID());
+//                    System.out.print('\t');
+//                }
                 System.out.println("\n----------------------");
             }
         } catch (JSONException e) {

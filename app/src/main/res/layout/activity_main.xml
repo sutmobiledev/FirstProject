@@ -30,9 +30,10 @@
                     android:orientation="horizontal"
                     tools:context=".MainActivity">
                     <TextView
+                        android:id="@+id/state"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:text="prj2"
+                        android:text=""
                         android:gravity="center"
                         android:textSize="25dp"
                         android:textColor="@color/colorPrimary"

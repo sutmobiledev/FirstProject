@@ -23,7 +23,7 @@ public class StorageManager {
         Log.i("LogInfo:StorageManager: ", "Save Done!");
     }
 
-    public void SaveCommentsToDB(ArrayList<Comment> data) {
+    public void saveCommentsToDB(ArrayList<Comment> data) {
         for (Comment c : data) {
             dataBaseHelper.addComment(c);
         }

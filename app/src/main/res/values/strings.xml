@@ -1,7 +1,10 @@
 <resources>
-    <string name="app_name">settings</string>
+    <string name="app_name">Telegram</string>
     <string name="action_settings">Developers</string>
     <string name="refreshBthBtn">GRID/LIST</string>
     <string name="names">Alireza Tabatabaeian, Sana Ayromlou, Kiarash Amini</string>
     <string name="title">Developers</string>
+    <string name="connected">Phase2</string>
+    <string name="updating">Updating…</string>
+    <string name="waiting">Waiting for Network</string>
 </resources>

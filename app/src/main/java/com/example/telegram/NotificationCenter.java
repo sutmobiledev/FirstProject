@@ -5,7 +5,7 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 
 public class NotificationCenter {
-    public static final int DATA_LOADED = 0x47;
+    public static final int POST_LOADED = 0x47, COMMENT_LOADED = 0x48;
     private static NotificationCenter notificationCenter = new NotificationCenter();
     private SparseArray<ArrayList<Object>> observers = new SparseArray<>();
 
@@ -17,11 +17,11 @@ public class NotificationCenter {
         return notificationCenter;
     }
 
-    public void addObserver(Object observer, int id) {
-        ArrayList<Object> objects = observers.get(id);
+    public void addObserver(Object observer, int eventId) {
+        ArrayList<Object> objects = observers.get(eventId);
         if (objects == null) {
             objects = new ArrayList<>();
-            observers.put(id, objects);
+            observers.put(eventId, objects);
         }
 
         if (objects.contains(observer))
@@ -38,15 +38,15 @@ public class NotificationCenter {
         }
     }
 
-    public void data_loaded(int id, Object... args) {
-        ArrayList<Object> objects = observers.get(id);
+    public void data_loaded(int eventId, Object... args) {
+        ArrayList<Object> objects = observers.get(eventId);
 
         for (int i = 0; i < objects.size(); i++) {
-            ((NotificationCenterDelegate) objects.get(i)).didReceivedNotification(id, args);
+            ((NotificationCenterDelegate) objects.get(i)).didReceivedNotification(eventId, args);
         }
     }
 
     public interface NotificationCenterDelegate {
-        void didReceivedNotification(int id, Object... args);
+        void didReceivedNotification(int eventId, Object... args);
     }
 }

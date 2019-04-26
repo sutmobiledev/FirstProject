@@ -8,15 +8,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewStub;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main2Activity extends AppCompatActivity {
+public class Main2Activity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
+    private MessageController controller = MessageController.getInstance();
+    private List<Card> cards = new ArrayList<>();
+    private TextView state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NotificationCenter.getInstance().addObserver(this, NotificationCenter.COMMENT_LOADED);
 
         setContentView(R.layout.activity_main2);
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -24,13 +29,38 @@ public class Main2Activity extends AppCompatActivity {
         ViewStub stubList = findViewById(R.id.stub_list);
         stubList.inflate();
 
-        List<Card> cards = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            cards.add(new Card());
-        }
+        state = findViewById(R.id.state);
+        state.setText(R.string.updating);
+    }
 
-        ListView listView = findViewById(R.id.listView);
-        listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (ConnectionManager.isNetworkAvailable(getActivity()))
+            controller.fetchComments(1);
+        else {
+            state.setText(R.string.waiting);
+
+            new Thread(() -> {
+                while (!ConnectionManager.isNetworkAvailable(getActivity())) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                controller.fetchComments(1);
+            }).start();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        NotificationCenter.getInstance().removeObserver(this);
     }
 
     @Override
@@ -57,6 +87,24 @@ public class Main2Activity extends AppCompatActivity {
 
     private Main2Activity getActivity() {
         return this;
+    }
+
+    @Override
+    public void didReceivedNotification(int eventId, Object... args) {
+        ArrayList<Comment> comments = (ArrayList<Comment>) args[0];
+
+        runOnUiThread(() -> {
+            cards = new ArrayList<>();
+            for (int i = 0; i < comments.size(); i++) {
+                Comment comment = comments.get(i);
+                cards.add(new Card(comment.getBody(), Card.TYPE_COMMENT, comment.getName()));
+            }
+
+            ListView listView = findViewById(R.id.listView);
+            listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
+
+            state.setText(R.string.connected);
+        });
     }
 }
 
