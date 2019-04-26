@@ -20,17 +20,17 @@ public class ImageAdapter extends ArrayAdapter<Card> {
     public View getView(int i, View view, ViewGroup viewGroup) {
         View v = view;
         if (view == null) {
-            LayoutInflater layoutInflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.linearlayout_card, null);
 
-            final TextView nameTextView = (TextView)view.findViewById(R.id.text1);
-            final TextView authorTextView = (TextView)view.findViewById(R.id.textview_book_author);
+            final TextView nameTextView = view.findViewById(R.id.text1);
+            final TextView authorTextView = view.findViewById(R.id.textview_book_author);
             final ViewHolder viewHolder = new ViewHolder(nameTextView, authorTextView);
             view.setTag(viewHolder);
         }
         Card card = getItem(i);
 
-        final ViewHolder viewHolder = (ViewHolder)view.getTag();
+        final ViewHolder viewHolder = (ViewHolder) view.getTag();
         viewHolder.nameTextView.setText(card.getName());
         viewHolder.authorTextView.setText(card.getAuthor());
 

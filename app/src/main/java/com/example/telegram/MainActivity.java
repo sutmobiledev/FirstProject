@@ -1,11 +1,9 @@
 package com.example.telegram;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,12 +12,8 @@ import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,84 +21,62 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
     static final int VIEW_MODE_LISTVIEW = 0;
     static final int VIEW_MODE_GRIDVIEW = 1;
-    ListView listView;
-    ImageAdapter listAdapter;
-    ImageAdapter gridAdapter;
-    List<Card> cards;
-    Button button;
-    //    Button refreshBtn, getBtn, clearBtn;
-    ArrayList<TextView> texts = new ArrayList<>();
-    MessageController controller = MessageController.getInstance();
-    //    LinearLayout layout;
-    Integer lastNUm = 0;
-    FileOutputStream fileOutputStream;
-    FileInputStream fileInputStream;
+
+    private MessageController controller = MessageController.getInstance();
     private ViewStub stubGrid;
     private ViewStub stubList;
-    private GridView gridView;
     private int currentViewMode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.DATA_LOADED);
-        lastNUm = 0;
         StorageManager.getInstance().setDataBaseHelper(new DataBaseHelper(this));
 
         super.onCreate(savedInstanceState);
         Log.i("states", "onCreate: ");
         setContentView(R.layout.activity_main);
 
-//        layout = findViewById(R.id.Layout);
-//
-//        getBtn = findViewById(R.id.getBtn);
-//        getBtn.setOnClickListener(v -> controller.fetch(false, lastNUm));
-//
-//        refreshBtn = findViewById(R.id.refreshBtn);
-//        refreshBtn.setOnClickListener(v -> controller.fetch(true, lastNUm));
-//
-//        clearBtn = findViewById(R.id.clearBtn);
-//        clearBtn.setOnClickListener(v -> {
-//            lastNUm = 0;
-//            MessageController.getInstance().getData().clear();
-//            layout.removeAllViews();
-//        });
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        button = findViewById(R.id.refreshBtn);
+        setSupportActionBar(findViewById(R.id.toolbar));
+
         stubList = findViewById(R.id.stub_list);
-        stubGrid = findViewById(R.id.stub_grid);
         stubList.inflate();
+
+        stubGrid = findViewById(R.id.stub_grid);
         stubGrid.inflate();
-        listView = findViewById(R.id.listView);
-        gridView = findViewById(R.id.gridView);
-        cards = new ArrayList<>();
+
+        List<Card> cards = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             cards.add(new Card());
         }
-        switchView();
 
+        Button button = findViewById(R.id.refreshBtn);
+        button.setOnClickListener(v -> {
+            Log.i("asdf", "refresh");
+            if (currentViewMode == VIEW_MODE_LISTVIEW)
+                currentViewMode = VIEW_MODE_GRIDVIEW;
+            else
+                currentViewMode = VIEW_MODE_LISTVIEW;
+
+            switchView();
+
+            getSharedPreferences("ViewMode", MODE_PRIVATE).edit().putInt("currentViewMode", currentViewMode).apply();
+        });
+
+        ListView listView = findViewById(R.id.listView);
+        listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
         listView.setOnItemClickListener((parent, view, position, id) ->
                 startActivity(new Intent(MainActivity.this, Main2Activity.class))
         );
+
+        GridView gridView = findViewById(R.id.gridView);
+        gridView.setAdapter(new ImageAdapter(this, R.layout.grid_view, cards));
         gridView.setOnItemClickListener((parent, view, position, id) ->
                 startActivity(new Intent(MainActivity.this, Main2Activity.class))
         );
 
-        SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
-        currentViewMode = sharedPreferences.getInt("currentViewMode", VIEW_MODE_LISTVIEW);
-        button.setOnClickListener(v -> {
-            Log.i("asdf", "refresh");
-            if (VIEW_MODE_LISTVIEW == currentViewMode) {
-                currentViewMode = VIEW_MODE_GRIDVIEW;
-            } else {
-                currentViewMode = VIEW_MODE_LISTVIEW;
-            }
-            switchView();
-            SharedPreferences sharedPreferences1 = getSharedPreferences("ViewMode", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("currentViewMode", currentViewMode);
-            editor.commit();
-        });
+        currentViewMode = getSharedPreferences("ViewMode", MODE_PRIVATE).getInt("currentViewMode", VIEW_MODE_LISTVIEW);
+
+        switchView();
     }
 
     @Override
@@ -116,23 +88,12 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     }
 
     private void switchView() {
-        if (VIEW_MODE_LISTVIEW == currentViewMode) {
+        if (currentViewMode == VIEW_MODE_LISTVIEW) {
             stubList.setVisibility(View.VISIBLE);
             stubGrid.setVisibility(View.GONE);
         } else {
             stubGrid.setVisibility(View.VISIBLE);
             stubList.setVisibility(View.GONE);
-        }
-        setAdapters();
-    }
-
-    private void setAdapters() {
-        if (VIEW_MODE_LISTVIEW == currentViewMode) {
-            listAdapter = new ImageAdapter(this, R.layout.list_view, cards);
-            listView.setAdapter(listAdapter);
-        } else {
-            gridAdapter = new ImageAdapter(this, R.layout.grid_view, cards);
-            gridView.setAdapter(gridAdapter);
         }
     }
 
@@ -174,13 +135,8 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
         super.onDestroy();
         NotificationCenter.getInstance().removeObserver(this);
-        try {
-            fileOutputStream.close();
-            fileInputStream.close();
-            new File("Data.txt").delete();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        new File("Data.txt").delete();
     }
 
     @Override

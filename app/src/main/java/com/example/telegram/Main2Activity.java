@@ -1,42 +1,36 @@
 package com.example.telegram;
 
-import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewStub;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
-    private ViewStub stubList;
-    ListView listView;
-    ImageAdapter listAdapter;
-    List<Card> cards;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main2);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(null);
-        setSupportActionBar(toolbar);
-        stubList = (ViewStub) findViewById(R.id.stub_list);
+        setSupportActionBar(findViewById(R.id.toolbar));
+
+        ViewStub stubList = findViewById(R.id.stub_list);
         stubList.inflate();
-        listView = findViewById(R.id.listView);
-        cards = new ArrayList<>();
-        for (int i = 0; i<100;i++){
+
+        List<Card> cards = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
             cards.add(new Card());
         }
-        listAdapter = new ImageAdapter(this,R.layout.list_view,cards);
-        listView.setAdapter(listAdapter);
+
+        ListView listView = findViewById(R.id.listView);
+        listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
     }
 
     @Override
@@ -47,10 +41,10 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem){
-        switch (menuItem.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             case R.id.action_settings:
-                Log.i("asdf","action_settings");
+                Log.i("asdf", "action_settings");
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(R.string.names).setTitle(R.string.title);
                 AlertDialog dialog = builder.create();

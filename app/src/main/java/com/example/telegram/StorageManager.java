@@ -32,7 +32,7 @@ public class StorageManager {
 
     public ArrayList<Post> loadPostsFromDB() {
         Log.i("LogInfo:StorageManager: ", "Load Done!");
-        return  dataBaseHelper.getPost();
+        return dataBaseHelper.getPost();
     }
 
 
