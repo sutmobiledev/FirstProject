@@ -1,12 +1,13 @@
 package com.example.telegram;
 
 import android.os.Message;
+import android.util.Log;
 
 import java.util.ArrayList;
 
 public class MessageController {
-    private final int updatePeriod = 5 * 60;
-    private long lastPostUpdate = 0, lastCommentsUpdate = 0;
+    private final int updatePeriod = 5 * 60 * 1000;
+    private long lastPostUpdate, lastCommentsUpdate;
 
     private static final MessageController messageControllerInstance = new MessageController();
     private DispatchQueue storageQueue, cloudQueue;
@@ -42,6 +43,9 @@ public class MessageController {
 
         postArrayList = new ArrayList<>();
         commentArrayList = new ArrayList<>();
+
+        lastPostUpdate = System.currentTimeMillis();
+        lastCommentsUpdate = System.currentTimeMillis();
     }
 
     public static MessageController getInstance() {
@@ -95,6 +99,8 @@ public class MessageController {
                 message.what = NotificationCenter.COMMENT_LOADED;
                 message.obj = commentArrayList;
                 cloudQueue.sendMessage(message, 0);
+
+                Log.i("forDebug", "fetchComments: load from server1");
             });
         } else {
             storageQueue.postRunnable(() -> {
@@ -106,6 +112,8 @@ public class MessageController {
                     message.what = NotificationCenter.COMMENT_LOADED;
                     message.obj = commentArrayList;
                     storageQueue.sendMessage(message, 0);
+
+                    Log.i("forDebug", "fetchComments: load from DB");
                 } else {
                     cloudQueue.postRunnable(() -> {
                         commentArrayList = ConnectionManager.getInstance().loadComments(postId);
@@ -114,6 +122,8 @@ public class MessageController {
                         message.what = NotificationCenter.COMMENT_LOADED;
                         message.obj = commentArrayList;
                         cloudQueue.sendMessage(message, 0);
+
+                        Log.i("forDebug", "fetchComments: load from server2");
                     });
                 }
             });

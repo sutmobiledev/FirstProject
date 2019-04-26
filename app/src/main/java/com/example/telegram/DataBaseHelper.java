@@ -67,11 +67,11 @@ class DataBaseHelper extends SQLiteOpenHelper {
     public void addComment(Comment comment) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues commentContentValues = new ContentValues();
-        commentContentValues.put(POSTS_TABLE_COL0, comment.getID());
-        commentContentValues.put(POSTS_TABLE_COL1, comment.getPostID());
-        commentContentValues.put(POSTS_TABLE_COL2, comment.getName());
-        commentContentValues.put(POSTS_TABLE_COL3, comment.getEmail());
-        commentContentValues.put(POSTS_TABLE_COL3, comment.getBody());
+        commentContentValues.put(COMMENTS_TABLE_COL0, comment.getID());
+        commentContentValues.put(COMMENTS_TABLE_COL1, comment.getPostID());
+        commentContentValues.put(COMMENTS_TABLE_COL2, comment.getName());
+        commentContentValues.put(COMMENTS_TABLE_COL3, comment.getEmail());
+        commentContentValues.put(COMMENTS_TABLE_COL4, comment.getBody());
         db.insert(COMMENTS_TABLE, null, commentContentValues);
         db.close();
     }
