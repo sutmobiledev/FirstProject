@@ -11,6 +11,25 @@ public class Post {
         this.body = body;
     }
 
+    public Post() {
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
     public int getID() {
         return ID;
     }

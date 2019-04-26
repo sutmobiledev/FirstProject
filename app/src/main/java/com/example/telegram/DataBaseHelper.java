@@ -2,8 +2,12 @@ package com.example.telegram;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATA_BASE_NAME = "postCommentDb";
@@ -73,5 +77,27 @@ class DataBaseHelper extends SQLiteOpenHelper {
         commentContentValues.put(POSTS_TABLE_COL3, comment.getBody());
         db.insert(COMMENTS_TABLE, null, commentContentValues);
         db.close();
+    }
+
+    public ArrayList<Post> getPost(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Post> posts = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + POSTS_TABLE, null);
+        Log.i("get post:",Integer.toString(cursor.getColumnCount()));
+        if (cursor.moveToFirst()) {
+            do {
+                Post post = new Post();
+                post.setID(cursor.getInt(0));
+                post.setUserID(cursor.getInt(1));
+                post.setTitle(cursor.getString(2));
+                post.setBody(cursor.getString(3));
+
+                posts.add(post);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return null;
     }
 }

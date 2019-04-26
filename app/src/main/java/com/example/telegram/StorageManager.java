@@ -17,9 +17,9 @@ public class StorageManager {
     private Formatter formatter;
     private Scanner scanner;
     private int last_num_in_file = 0;
+    private DataBaseHelper dataBaseHelper;
 
     private StorageManager() {
-
     }
 
     public static StorageManager getInstance() {
@@ -74,11 +74,28 @@ public class StorageManager {
     }
 
     public void saveToDB(ArrayList<Post> data) {
+        for (Post p : data) {
+            dataBaseHelper.addPost(p);
+        }
         Log.i("LogInfo:StorageManager: ", "Save Done!");
     }
 
     public ArrayList<Post> loadFromDB() {
         Log.i("LogInfo:StorageManager: ", "Load Done!");
-        return new ArrayList<>();
+        return  dataBaseHelper.getPost();
+    }
+
+    public ArrayList<Post> loadPostsFromDB(){
+        Log.i("LogInfo:StorageManager: ", "Posts Load Done!");
+        return null;
+    }
+
+    public ArrayList<Comment> loadCommentsFromDB(int postId) {
+        Log.i("LogInfo:StorageManager: ", "Posts Load Done!");
+        return null;
+    }
+
+    public void setDataBaseHelper(DataBaseHelper dataBaseHelper) {
+        this.dataBaseHelper = dataBaseHelper;
     }
 }
