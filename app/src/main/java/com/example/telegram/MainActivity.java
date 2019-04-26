@@ -165,10 +165,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                    Card card = cards.get(i);
-                    Log.i("asdf", String.valueOf(card.getPostId()));
-                    Main2Activity.getInstance().setPostId(card.getPostId());
-                    startActivity(new Intent(MainActivity.this, Main2Activity.class));
+                    findPostId(i);
                 }
             });
 
@@ -177,13 +174,16 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                    Card card = cards.get(i);
-                    Log.i("asdf", String.valueOf(card.getPostId()));
-                    Main2Activity.getInstance().setPostId(card.getPostId());
-                    startActivity(new Intent(MainActivity.this, Main2Activity.class));
+                    findPostId(i);
                 }
             });
             state.setText(R.string.connected);
         });
+    }
+    private void findPostId(int i){
+        Card card = cards.get(i);
+        Log.i("asdf", String.valueOf(card.getPostId()));
+        Main2Activity.getInstance().setPostId(card.getPostId());
+        startActivity(new Intent(MainActivity.this, Main2Activity.class));
     }
 }
