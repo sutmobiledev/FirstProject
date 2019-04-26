@@ -2,20 +2,11 @@ package com.example.telegram;
 
 import android.util.Log;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.Scanner;
 
 public class StorageManager {
     private static final StorageManager storageManagerInstance = new StorageManager();
 
-    private FileInputStream fileInputStream;
-    private FileOutputStream fileOutputStream;
-    private Formatter formatter;
-    private Scanner scanner;
-    private int last_num_in_file = 0;
     private DataBaseHelper dataBaseHelper;
 
     private StorageManager() {

@@ -11,16 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,25 +25,24 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NotificationCenter.NotificationCenterDelegate {
 
-    private ViewStub stubGrid;
-    private ViewStub stubList;
+    static final int VIEW_MODE_LISTVIEW = 0;
+    static final int VIEW_MODE_GRIDVIEW = 1;
     ListView listView;
-    private GridView gridView;
     ImageAdapter listAdapter;
     ImageAdapter gridAdapter;
-    private int currentViewMode = 0;
-    static final int VIEW_MODE_LISTVIEW =0;
-    static final int VIEW_MODE_GRIDVIEW =1;
     List<Card> cards;
     Button button;
-
-//    Button refreshBtn, getBtn, clearBtn;
+    //    Button refreshBtn, getBtn, clearBtn;
     ArrayList<TextView> texts = new ArrayList<>();
     MessageController controller = MessageController.getInstance();
-//    LinearLayout layout;
+    //    LinearLayout layout;
     Integer lastNUm = 0;
     FileOutputStream fileOutputStream;
     FileInputStream fileInputStream;
+    private ViewStub stubGrid;
+    private ViewStub stubList;
+    private GridView gridView;
+    private int currentViewMode = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,44 +71,38 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         button = findViewById(R.id.refreshBtn);
-        stubList = (ViewStub) findViewById(R.id.stub_list);
-        stubGrid = (ViewStub) findViewById(R.id.stub_grid);
+        stubList = findViewById(R.id.stub_list);
+        stubGrid = findViewById(R.id.stub_grid);
         stubList.inflate();
         stubGrid.inflate();
         listView = findViewById(R.id.listView);
         gridView = findViewById(R.id.gridView);
         cards = new ArrayList<>();
-        for (int i = 0; i<100;i++){
+        for (int i = 0; i < 100; i++) {
             cards.add(new Card());
         }
         switchView();
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this,Main2Activity.class));
-            }
-        });
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView parent, View view, int position, long id) {
-                startActivity(new Intent(MainActivity.this,Main2Activity.class));
 
-            }
-        });
-        SharedPreferences sharedPreferences = getSharedPreferences("ViewMode",MODE_PRIVATE);
-        currentViewMode= sharedPreferences.getInt("currentViewMode",VIEW_MODE_LISTVIEW);
+        listView.setOnItemClickListener((parent, view, position, id) ->
+                startActivity(new Intent(MainActivity.this, Main2Activity.class))
+        );
+        gridView.setOnItemClickListener((parent, view, position, id) ->
+                startActivity(new Intent(MainActivity.this, Main2Activity.class))
+        );
+
+        SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
+        currentViewMode = sharedPreferences.getInt("currentViewMode", VIEW_MODE_LISTVIEW);
         button.setOnClickListener(v -> {
-            Log.i("asdf","refresh");
-            if(VIEW_MODE_LISTVIEW == currentViewMode){
+            Log.i("asdf", "refresh");
+            if (VIEW_MODE_LISTVIEW == currentViewMode) {
                 currentViewMode = VIEW_MODE_GRIDVIEW;
-            }
-            else{
+            } else {
                 currentViewMode = VIEW_MODE_LISTVIEW;
             }
             switchView();
-            SharedPreferences sharedPreferences1 = getSharedPreferences("ViewMode",MODE_PRIVATE);
+            SharedPreferences sharedPreferences1 = getSharedPreferences("ViewMode", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("currentViewMode",currentViewMode);
+            editor.putInt("currentViewMode", currentViewMode);
             editor.commit();
         });
     }
@@ -121,26 +111,15 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     protected void onStart() {
         super.onStart();
         Log.i("states", "onStart: ");
-        try {
-            fileOutputStream = openFileOutput("Data.txt", MODE_APPEND);
-            fileInputStream = openFileInput("Data.txt");
-
-            StorageManager.getInstance().setFileOutputStream(fileOutputStream);
-            StorageManager.getInstance().setFileInputStream(fileInputStream);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
         didReceivedNotification(0, controller.getData());
-
     }
 
-    private void switchView(){
-        if(VIEW_MODE_LISTVIEW == currentViewMode){
+    private void switchView() {
+        if (VIEW_MODE_LISTVIEW == currentViewMode) {
             stubList.setVisibility(View.VISIBLE);
             stubGrid.setVisibility(View.GONE);
-        }else{
+        } else {
             stubGrid.setVisibility(View.VISIBLE);
             stubList.setVisibility(View.GONE);
         }
@@ -148,12 +127,11 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     }
 
     private void setAdapters() {
-        if(VIEW_MODE_LISTVIEW == currentViewMode){
-            listAdapter = new ImageAdapter(this,R.layout.list_view,cards);
+        if (VIEW_MODE_LISTVIEW == currentViewMode) {
+            listAdapter = new ImageAdapter(this, R.layout.list_view, cards);
             listView.setAdapter(listAdapter);
-        }
-        else {
-            gridAdapter = new ImageAdapter(this,R.layout.grid_view,cards);
+        } else {
+            gridAdapter = new ImageAdapter(this, R.layout.grid_view, cards);
             gridView.setAdapter(gridAdapter);
         }
     }
@@ -166,10 +144,10 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem){
-        switch (menuItem.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             case R.id.action_settings:
-                Log.i("asdf","action_settings");
+                Log.i("asdf", "action_settings");
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(R.string.names).setTitle(R.string.title);
                 AlertDialog dialog = builder.create();
