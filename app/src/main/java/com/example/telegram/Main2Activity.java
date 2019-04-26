@@ -17,6 +17,16 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
     private MessageController controller = MessageController.getInstance();
     private List<Card> cards = new ArrayList<>();
     private TextView state;
+    private int postId;
+    private static Main2Activity main2Activity = new Main2Activity();
+
+    public static Main2Activity getInstance() {
+        return main2Activity;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +107,7 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
             cards = new ArrayList<>();
             for (int i = 0; i < comments.size(); i++) {
                 Comment comment = comments.get(i);
-                cards.add(new Card(comment.getBody(), Card.TYPE_COMMENT, comment.getName()));
+                cards.add(new Card(comment.getBody(), Card.TYPE_COMMENT, comment.getName(),comment.getPostID()));
             }
 
             ListView listView = findViewById(R.id.listView);

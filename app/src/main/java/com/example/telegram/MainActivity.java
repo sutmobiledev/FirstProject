@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
             cards = new ArrayList<>();
             for (int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
-                cards.add(new Card(post.getBody(), Card.TYPE_POST, post.getTitle()));
+                cards.add(new Card(post.getBody(), Card.TYPE_POST, post.getTitle(),0));
             }
 
             Button button = findViewById(R.id.refreshBtn);
@@ -160,15 +161,26 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
             ListView listView = findViewById(R.id.listView);
             listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
-            listView.setOnItemClickListener((parent, view, position, id) ->
-                    startActivity(new Intent(MainActivity.this, Main2Activity.class))
-            );
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                    Card card = cards.get(i);
+                    Log.i("asdf", String.valueOf(card.getName()));
+                    Main2Activity.getInstance().setPostId(card.getPostId());
+                }
+            });
 
             GridView gridView = findViewById(R.id.gridView);
             gridView.setAdapter(new ImageAdapter(this, R.layout.grid_view, cards));
-            gridView.setOnItemClickListener((parent, view, position, id) ->
-                    startActivity(new Intent(MainActivity.this, Main2Activity.class))
-            );
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView adapterView, View view, int i, long l) {
+                    Card card = cards.get(i);
+                    Main2Activity.getInstance().setPostId(card.getPostId());
+
+
+                }
+            });
 
             state.setText(R.string.connected);
         });
