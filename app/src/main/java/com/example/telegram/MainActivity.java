@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     private List<Card> cards = new ArrayList<>();
     private TextView state;
     private int currentViewMode = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,21 +60,10 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         Log.i("states", "onStart: ");
 
         if (ConnectionManager.isNetworkAvailable(getActivity()))
-            controller.fetchPost();
+            controller.fetchPost(false);
         else {
             state.setText(R.string.waiting);
-
-            new Thread(() -> {
-                while (!ConnectionManager.isNetworkAvailable(getActivity())) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                controller.fetchPost();
-            }).start();
+            controller.fetchPost(true);
         }
     }
 
@@ -162,28 +149,34 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
             ListView listView = findViewById(R.id.listView);
             listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                    findPostId(i);
-                }
+            listView.setOnItemClickListener((adapterView, view, i, l) -> {
+                getSharedPreferences("postId", MODE_PRIVATE).edit().putInt("postId", cards.get(i).getPostId()).apply();
+                startActivity(new Intent(MainActivity.this, Main2Activity.class));
             });
 
             GridView gridView = findViewById(R.id.gridView);
             gridView.setAdapter(new ImageAdapter(this, R.layout.grid_view, cards));
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView adapterView, View view, int i, long l) {
-                    findPostId(i);
-                }
+            gridView.setOnItemClickListener((adapterView, view, i, l) -> {
+                getSharedPreferences("postId", MODE_PRIVATE).edit().putInt("postId", cards.get(i).getPostId()).apply();
+                startActivity(new Intent(MainActivity.this, Main2Activity.class));
             });
-            state.setText(R.string.connected);
+
+            if ((int) args[1] == 1)  // means network is not available
+                new Thread(() -> {
+                    try {
+                        while (!ConnectionManager.isNetworkAvailable(getActivity()))
+                            Thread.sleep(500);
+
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    runOnUiThread(() -> state.setText(R.string.updating));
+                    controller.fetchPost(false);
+                }).start();
+            else
+                state.setText(R.string.connected);
         });
-    }
-    private void findPostId(int i){
-        Card card = cards.get(i);
-        Log.i("asdf", String.valueOf(card.getPostId()));
-        Main2Activity.getInstance().setPostId(card.getPostId());
-        startActivity(new Intent(MainActivity.this, Main2Activity.class));
     }
 }

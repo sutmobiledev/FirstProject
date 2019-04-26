@@ -17,16 +17,6 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
     private MessageController controller = MessageController.getInstance();
     private List<Card> cards = new ArrayList<>();
     private TextView state;
-    private int postId;
-    private static Main2Activity main2Activity = new Main2Activity();
-
-    public static Main2Activity getInstance() {
-        return main2Activity;
-    }
-
-    public void setPostId(int postId) {
-        this.postId = postId;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,23 +36,13 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
     @Override
     protected void onStart() {
         super.onStart();
+        int postId = getSharedPreferences("postId", MODE_PRIVATE).getInt("postId", 0);
 
         if (ConnectionManager.isNetworkAvailable(getActivity()))
-            controller.fetchComments(1);
+            controller.fetchComments(postId, false);
         else {
             state.setText(R.string.waiting);
-
-            new Thread(() -> {
-                while (!ConnectionManager.isNetworkAvailable(getActivity())) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                controller.fetchComments(1);
-            }).start();
+            controller.fetchComments(postId, true);
         }
     }
 
@@ -113,7 +93,23 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
             ListView listView = findViewById(R.id.listView);
             listView.setAdapter(new ImageAdapter(this, R.layout.list_view, cards));
 
-            state.setText(R.string.connected);
+            if ((int) args[1] == 1)
+                new Thread(() -> {
+                    try {
+                        while (!ConnectionManager.isNetworkAvailable(getActivity()))
+                            Thread.sleep(500);
+
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    int postId = getSharedPreferences("postId", MODE_PRIVATE).getInt("postId", 0);
+
+                    runOnUiThread(() -> state.setText(R.string.updating));
+                    controller.fetchComments(postId, false);
+                }).start();
+            else
+                state.setText(R.string.connected);
         });
     }
 }

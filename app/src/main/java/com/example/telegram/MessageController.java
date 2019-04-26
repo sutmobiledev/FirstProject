@@ -6,10 +6,9 @@ import android.util.Log;
 import java.util.ArrayList;
 
 public class MessageController {
+    private static final MessageController messageControllerInstance = new MessageController();
     private final int updatePeriod = 5 * 60 * 1000;
     private long lastPostUpdate, lastCommentsUpdate;
-
-    private static final MessageController messageControllerInstance = new MessageController();
     private DispatchQueue storageQueue, cloudQueue;
 
     private ArrayList<Post> postArrayList;
@@ -22,11 +21,11 @@ public class MessageController {
                 if (inputMessage.what == NotificationCenter.POST_LOADED) {
                     storageQueue.postRunnable(() -> StorageManager.getInstance().savePostsToDB(postArrayList));
 
-                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
+                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj, inputMessage.arg1);
                 } else if (inputMessage.what == NotificationCenter.COMMENT_LOADED) {
                     storageQueue.postRunnable(() -> StorageManager.getInstance().saveCommentsToDB(commentArrayList));
 
-                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
+                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj, inputMessage.arg1);
                 }
             }
         };
@@ -34,9 +33,9 @@ public class MessageController {
             @Override
             public void handleMessage(Message inputMessage) {
                 if (inputMessage.what == NotificationCenter.POST_LOADED) {
-                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
+                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj, inputMessage.arg1);
                 } else if (inputMessage.what == NotificationCenter.COMMENT_LOADED) {
-                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj);
+                    NotificationCenter.getInstance().data_loaded(inputMessage.what, inputMessage.obj, inputMessage.arg1);
                 }
             }
         };
@@ -52,7 +51,20 @@ public class MessageController {
         return messageControllerInstance;
     }
 
-    public void fetchPost() {
+    public void fetchPost(boolean mustLoadFromDB) {
+        if (mustLoadFromDB) {
+            storageQueue.postRunnable(() -> {
+                postArrayList = StorageManager.getInstance().loadPostsFromDB();
+
+                Message message = new Message();
+                message.what = NotificationCenter.POST_LOADED;
+                message.obj = postArrayList;
+                message.arg1 = 1;
+                storageQueue.sendMessage(message, 0);
+            });
+            return;
+        }
+
         if (System.currentTimeMillis() - lastPostUpdate > updatePeriod) {
             lastPostUpdate = System.currentTimeMillis();
 
@@ -62,6 +74,7 @@ public class MessageController {
                 Message message = new Message();
                 message.what = NotificationCenter.POST_LOADED;
                 message.obj = postArrayList;
+                message.arg1 = 0;
                 cloudQueue.sendMessage(message, 0);
             });
         } else {
@@ -73,6 +86,7 @@ public class MessageController {
                     Message message = new Message();
                     message.what = NotificationCenter.POST_LOADED;
                     message.obj = postArrayList;
+                    message.arg1 = 0;
                     storageQueue.sendMessage(message, 0);
                 } else {
                     cloudQueue.postRunnable(() -> {
@@ -81,6 +95,7 @@ public class MessageController {
                         Message message = new Message();
                         message.what = NotificationCenter.POST_LOADED;
                         message.obj = postArrayList;
+                        message.arg1 = 0;
                         cloudQueue.sendMessage(message, 0);
                     });
                 }
@@ -88,7 +103,20 @@ public class MessageController {
         }
     }
 
-    public void fetchComments(int postId) {
+    public void fetchComments(int postId, boolean mustLoadFromDB) {
+        if (mustLoadFromDB) {
+            storageQueue.postRunnable(() -> {
+                commentArrayList = StorageManager.getInstance().loadCommentsFromDB(postId);
+
+                Message message = new Message();
+                message.what = NotificationCenter.COMMENT_LOADED;
+                message.obj = commentArrayList;
+                message.arg1 = 1;
+                storageQueue.sendMessage(message, 0);
+            });
+            return;
+        }
+
         if (System.currentTimeMillis() - lastCommentsUpdate > updatePeriod) {
             lastCommentsUpdate = System.currentTimeMillis();
 
@@ -98,6 +126,7 @@ public class MessageController {
                 Message message = new Message();
                 message.what = NotificationCenter.COMMENT_LOADED;
                 message.obj = commentArrayList;
+                message.arg1 = 0;
                 cloudQueue.sendMessage(message, 0);
 
                 Log.i("forDebug", "fetchComments: load from server1");
@@ -111,6 +140,7 @@ public class MessageController {
                     Message message = new Message();
                     message.what = NotificationCenter.COMMENT_LOADED;
                     message.obj = commentArrayList;
+                    message.arg1 = 0;
                     storageQueue.sendMessage(message, 0);
 
                     Log.i("forDebug", "fetchComments: load from DB");
@@ -121,6 +151,7 @@ public class MessageController {
                         Message message = new Message();
                         message.what = NotificationCenter.COMMENT_LOADED;
                         message.obj = commentArrayList;
+                        message.arg1 = 0;
                         cloudQueue.sendMessage(message, 0);
 
                         Log.i("forDebug", "fetchComments: load from server2");

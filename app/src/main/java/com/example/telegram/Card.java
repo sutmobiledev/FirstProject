@@ -17,7 +17,7 @@ public class Card {
     }
 
     public String getName() {
-        if(title != null)
+        if (title != null)
             return title;
         else
             return name;
