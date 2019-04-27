@@ -1,10 +1,13 @@
 package com.example.telegram;
 
+import android.widget.TextView;
+
 public class Card {
     public static final int TYPE_POST = 0, TYPE_COMMENT = 1;
     private String title, name, body;
     private int type;
     private int postId;
+
 
     public Card(String body, int type, String title_name,int postId) {
         this.body = body;

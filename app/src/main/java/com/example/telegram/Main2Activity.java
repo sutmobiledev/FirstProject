@@ -17,6 +17,7 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
     private MessageController controller = MessageController.getInstance();
     private List<Card> cards = new ArrayList<>();
     private TextView state;
+    int postId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,7 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
     @Override
     protected void onStart() {
         super.onStart();
-        int postId = getSharedPreferences("postId", MODE_PRIVATE).getInt("postId", 0);
+        postId = getSharedPreferences("postId", MODE_PRIVATE).getInt("postId", 0);
 
         if (ConnectionManager.isNetworkAvailable(getActivity()))
             controller.fetchComments(postId, false);
@@ -103,13 +104,13 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    int postId = getSharedPreferences("postId", MODE_PRIVATE).getInt("postId", 0);
+                    postId = getSharedPreferences("postId", MODE_PRIVATE).getInt("postId", 0);
 
                     runOnUiThread(() -> state.setText(R.string.updating));
                     controller.fetchComments(postId, false);
                 }).start();
             else
-                state.setText(R.string.connected);
+                state.setText("Post" +postId + ","+comments.size() + "comments");
         });
     }
 }
