@@ -17,6 +17,7 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
     private MessageController controller = MessageController.getInstance();
     private List<Card> cards = new ArrayList<>();
     private TextView state;
+    private ViewStub stubList;
     int postId;
 
     @Override
@@ -27,7 +28,7 @@ public class Main2Activity extends AppCompatActivity implements NotificationCent
         setContentView(R.layout.activity_main2);
         setSupportActionBar(findViewById(R.id.toolbar));
 
-        ViewStub stubList = findViewById(R.id.stub_list);
+        stubList = findViewById(R.id.stub_list);
         stubList.inflate();
 
         state = findViewById(R.id.state);

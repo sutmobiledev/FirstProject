@@ -46,14 +46,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="708dp"
+            android:layout_height="400dp"
             android:layout_margin="12dp"
             android:orientation="vertical"
             tools:context=".MainActivity">
             <ViewStub
                 android:id="@+id/stub_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="400dp"
                 android:inflatedId="@+id/show_layout"
                 android:layout="@layout/list_view"/>
         </LinearLayout>
