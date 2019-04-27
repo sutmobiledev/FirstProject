@@ -47,6 +47,10 @@ class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onOpen(SQLiteDatabase db) {
+    }
+
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS '" + POSTS_TABLE + "'");
         db.execSQL("DROP TABLE IF EXISTS '" + COMMENTS_TABLE + "'");
@@ -121,5 +125,17 @@ class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         cursor.close();
         return comments;
+    }
+
+    public void deletePost(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(POSTS_TABLE, "id = " + id, null);
+        db.close();
+    }
+
+    public void deleteComment(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(COMMENTS_TABLE, "id = " + id, null);
+        db.close();
     }
 }

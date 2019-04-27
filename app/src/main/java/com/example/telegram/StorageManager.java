@@ -18,6 +18,7 @@ public class StorageManager {
 
     public void savePostsToDB(ArrayList<Post> data) {
         for (Post p : data) {
+            dataBaseHelper.deletePost(p.getID());
             dataBaseHelper.addPost(p);
         }
         Log.i("LogInfo:StorageManager: ", "Save Done!");
@@ -25,6 +26,7 @@ public class StorageManager {
 
     public void saveCommentsToDB(ArrayList<Comment> data) {
         for (Comment c : data) {
+            dataBaseHelper.deleteComment(c.getID());
             dataBaseHelper.addComment(c);
         }
         Log.i("LogInfo:StorageManager: ", "Save Comment Done!");
